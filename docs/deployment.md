@@ -8,16 +8,17 @@ Only the **preview** target exists. It is served on a `workers.dev` URL, has no
 routes or custom domains, and cannot serve `apminteriordesign.com`. Production
 launch (custom domain, DNS) is a separate ticket.
 
-**Status:** preview deployed and verified on 2026-10-06.
+**Status:** preview deployed and verified (latest: AMP-5 design, 2026-10-06).
 
 | Field           | Value                                                     |
 | --------------- | --------------------------------------------------------- |
 | URL             | https://apm-website-preview.apminteriordesign.workers.dev |
-| Deployed commit | `5b1671e` (Wrangler version tag)                          |
-| Version ID      | `c02002eb-fd25-4f45-8755-6a1f0b7a70c7`                    |
-| Verification    | `verify:hosting` 63/63 passed; browser checks (see PR #3) |
+| Deployed commit | `efa48c3` (AMP-5, PR #4; Wrangler version tag)            |
+| Version ID      | `f3ebedac-57ce-4ecc-84dd-dca154f005a1`                    |
+| Verification    | `verify:hosting` 63/63 passed; browser checks (see PR #4) |
 
 Update this table after each redeploy, or run `npx wrangler deployments list`.
+Previous: `5b1671e` / `c02002eb…` (AMP-4 scaffold, PR #3), available for rollback.
 
 | Target  | Worker name           | URL                                                         | Indexed?              |
 | ------- | --------------------- | ----------------------------------------------------------- | --------------------- |
