@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import EstimateCta from '../components/EstimateCta.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getService } from '../config/services';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => (b.data.completed?.getTime() ?? 0) - (a.data.completed?.getTime() ?? 0),
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Completed painting, accent wall, and property enhancement work by APM."
+>
+  <PageHeader
+    eyebrow="Our work"
+    title="Projects"
+    lead="A look at completed painting, accent wall, and property enhancement work."
+  />
+
+  <Section labelledBy="projects-heading">
+    <h2 id="projects-heading" class="visually-hidden">
+      Completed projects
+    </h2>
+    {projects.length > 0 ? (
+      <ul class="grid project-list">
+        {projects.map((project) => (
+          <li class="project">
+            {project.data.coverImage && (
+              <Image src={project.data.coverImage} alt={project.data.coverAlt ?? ''} />
+            )}
+            <div class="project__body">
+              <h3>{project.data.title}</h3>
+              <p>{project.data.summary}</p>
+              <p class="project__meta">
+                {project.data.services.map((slug) => getService(slug).title).join(' · ')}
+                {project.data.area && ` — ${project.data.area}`}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="lead">Our project gallery is being prepared. Please check back soon.</p>
+    )}
+  </Section>
+
+  <EstimateCta />
+</BaseLayout>
+
+<style>
+  .project-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .project {
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .project__body {
+    padding: var(--space-5);
+  }
+
+  .project__meta {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>

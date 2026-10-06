@@ -1,0 +1,34 @@
+---
+import { site } from '../config/site';
+import { allowIndexing } from '../config/integrations';
+
+export interface Props {
+  /** Page title; the site name is appended. Omit on the homepage. */
+  title?: string | undefined;
+  description?: string | undefined;
+  /** Force noindex regardless of environment (e.g. the 404 page). */
+  noindex?: boolean | undefined;
+}
+
+const { title, description = site.description, noindex = false } = Astro.props;
+
+const fullTitle = title ? `${title} | ${site.legalName}` : `${site.legalName} | ${site.tagline}`;
+// Canonical and Open Graph URLs need an absolute origin, which is only known
+// once PUBLIC_SITE_URL is set (production domain pending).
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : null;
+const robots = noindex || !allowIndexing ? 'noindex, nofollow' : 'index, follow';
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={robots} />
+<meta name="theme-color" content="#263238" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+{canonical && <link rel="canonical" href={canonical} />}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.legalName} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}

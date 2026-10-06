@@ -1,0 +1,36 @@
+---
+export interface Props {
+  /** Heading id, used to label the section for assistive technology. */
+  labelledBy?: string;
+  tone?: 'default' | 'alt' | 'dark';
+  width?: 'default' | 'narrow';
+  class?: string;
+}
+
+const { labelledBy, tone = 'default', width = 'default', class: className } = Astro.props;
+---
+
+<section class:list={['section', `section--${tone}`, className]} aria-labelledby={labelledBy}>
+  <div class:list={['container', { 'container--narrow': width === 'narrow' }]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-8);
+  }
+
+  .section--alt {
+    background: var(--color-surface-alt);
+  }
+
+  .section--dark {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+
+  .section--dark :global(a:not(.button)) {
+    color: inherit;
+  }
+</style>

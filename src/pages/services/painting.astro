@@ -1,0 +1,30 @@
+---
+import EstimateCta from '../../components/EstimateCta.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getService } from '../../config/services';
+
+const service = getService('painting');
+---
+
+<BaseLayout title={service.title} description={service.summary}>
+  <PageHeader eyebrow="Our core specialty" title={service.title} lead={service.summary} />
+
+  <Section labelledBy="painting-approach-heading" width="narrow">
+    <div class="prose">
+      <h2 id="painting-approach-heading">How we approach painting</h2>
+      <p>
+        Good painting starts long before the first coat. We focus on preparation, protecting your
+        space, and careful application so the result is clean and consistent.
+      </p>
+      <h2>Who we paint for</h2>
+      <p>
+        We work with homeowners, property owners, real estate investors, and commercial clients.
+      </p>
+      <!-- TODO(content): Confirm painting scope (interior, exterior, cabinets, commercial) and add approved project photos. -->
+    </div>
+  </Section>
+
+  <EstimateCta heading="Ready to talk about painting?" />
+</BaseLayout>

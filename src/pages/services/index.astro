@@ -1,0 +1,47 @@
+---
+import EstimateCta from '../../components/EstimateCta.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { services } from '../../config/services';
+import { site } from '../../config/site';
+
+const featured = services.filter((service) => service.featured);
+const additional = services.filter((service) => !service.featured);
+---
+
+<BaseLayout
+  title="Services"
+  description={`Professional painting, custom accent walls, and coordinated property enhancement services from ${site.legalName}.`}
+>
+  <PageHeader
+    eyebrow={site.tagline}
+    title="Our services"
+    lead="From a single room to a full property refresh, APM coordinates the work so it is finished together and finished well."
+  />
+
+  <Section labelledBy="specialties-heading">
+    <h2 id="specialties-heading">Design and finish</h2>
+    <div class="grid">
+      {featured.map((service) => (
+        <ServiceCard service={service} />
+      ))}
+    </div>
+  </Section>
+
+  <Section tone="alt" labelledBy="additional-heading">
+    <h2 id="additional-heading">Property enhancement</h2>
+    <p class="lead">
+      Related services we can coordinate with your project. Ask about your specific needs when you
+      request an estimate.
+    </p>
+    <div class="grid">
+      {additional.map((service) => (
+        <ServiceCard service={service} />
+      ))}
+    </div>
+  </Section>
+
+  <EstimateCta />
+</BaseLayout>

@@ -1,0 +1,87 @@
+---
+import type { Service } from '../config/services';
+
+export interface Props {
+  service: Service;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { service, headingLevel: Heading = 'h3' } = Astro.props;
+---
+
+<article class:list={['service-card', { 'service-card--featured': service.featured }]}>
+  <Heading class="service-card__title">
+    {service.href ? (
+      <a href={service.href} class="service-card__link">
+        {service.title}
+      </a>
+    ) : (
+      service.title
+    )}
+  </Heading>
+  <p class="service-card__summary">{service.summary}</p>
+  {service.href && (
+    <span class="service-card__more" aria-hidden="true">
+      Learn more →
+    </span>
+  )}
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+  }
+
+  .service-card--featured {
+    border-top: 4px solid var(--color-accent);
+  }
+
+  .service-card__title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .service-card__link {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  /* Make the whole card clickable while keeping one link in the a11y tree. */
+  .service-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+
+  .service-card__link:focus-visible {
+    outline: none;
+  }
+
+  .service-card__link:focus-visible::after {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  .service-card:has(.service-card__link):hover {
+    border-color: var(--color-accent);
+  }
+
+  .service-card__summary {
+    color: var(--color-text-muted);
+    flex: 1;
+  }
+
+  .service-card__more {
+    margin-top: auto;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+</style>

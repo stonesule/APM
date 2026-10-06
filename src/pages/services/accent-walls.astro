@@ -1,0 +1,26 @@
+---
+import EstimateCta from '../../components/EstimateCta.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getService } from '../../config/services';
+
+const service = getService('accent-walls');
+---
+
+<BaseLayout title={service.title} description={service.summary}>
+  <PageHeader eyebrow="Design and installation" title={service.title} lead={service.summary} />
+
+  <Section labelledBy="accent-approach-heading" width="narrow">
+    <div class="prose">
+      <h2 id="accent-approach-heading">A focal point, designed for your space</h2>
+      <p>
+        An accent wall can define a room, highlight architecture, or add warmth and texture. We work
+        with you on the look, then handle the installation and finishing.
+      </p>
+      <!-- TODO(content): Confirm accent wall styles and materials offered, and add approved project photos. -->
+    </div>
+  </Section>
+
+  <EstimateCta heading="Considering an accent wall?" />
+</BaseLayout>
