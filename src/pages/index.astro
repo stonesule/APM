@@ -1,0 +1,174 @@
+---
+import { getCollection } from 'astro:content';
+import Button from '../components/Button.astro';
+import EstimateCta from '../components/EstimateCta.astro';
+import Section from '../components/Section.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { estimateCta } from '../config/navigation';
+import { audiences, services } from '../config/services';
+import { site } from '../config/site';
+
+const testimonials = await getCollection('testimonials', ({ data }) => !data.draft);
+---
+
+<BaseLayout>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container hero__inner">
+      <p class="eyebrow">{site.tagline}</p>
+      <h1 id="hero-heading">Thoughtful design. Quality craftsmanship. One trusted company.</h1>
+      <p class="lead">
+        APM provides professional painting, custom accent walls, and coordinated property
+        enhancement services for homes and properties across {site.market}.
+      </p>
+      <div class="hero__actions">
+        <Button href={estimateCta.href}>{estimateCta.label}</Button>
+        <Button href="/services/" variant="secondary">
+          Explore Our Services
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <Section labelledBy="services-heading">
+    <div class="section-intro">
+      <h2 id="services-heading">Our services</h2>
+      <p class="lead">
+        Painting is our core specialty. We also coordinate the related work that brings a space
+        together, so you can rely on one team from start to finish.
+      </p>
+    </div>
+    <div class="grid">
+      {services.map((service) => (
+        <ServiceCard service={service} />
+      ))}
+    </div>
+  </Section>
+
+  <Section tone="alt" labelledBy="approach-heading">
+    <div class="approach">
+      <div>
+        <h2 id="approach-heading">Why clients choose APM</h2>
+        <p>{site.experienceStatement}</p>
+      </div>
+      <ul class="approach__list">
+        <li>
+          <h3>Quality workmanship</h3>
+          <p>We take care with preparation and detail so the finished work looks right.</p>
+        </li>
+        <li>
+          <h3>Dependable service</h3>
+          <p>We communicate clearly and follow through on what we agree to do.</p>
+        </li>
+        <li>
+          <h3>Coordinated services</h3>
+          <p>Painting, accent walls, and related tasks are planned together by one company.</p>
+        </li>
+      </ul>
+    </div>
+  </Section>
+
+  <Section labelledBy="audiences-heading">
+    <h2 id="audiences-heading">Who we work with</h2>
+    <ul class="audiences">
+      {audiences.map((audience) => (
+        <li>{audience}</li>
+      ))}
+    </ul>
+  </Section>
+
+  {testimonials.length > 0 && (
+    <Section tone="alt" labelledBy="testimonials-heading">
+      <h2 id="testimonials-heading">What our clients say</h2>
+      <div class="grid">
+        {testimonials.map((entry) => (
+          <figure class="testimonial">
+            <blockquote set:html={entry.rendered?.html ?? ''} />
+            <figcaption>{entry.data.attribution}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </Section>
+  )}
+
+  <EstimateCta />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-8);
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero h1 {
+    max-width: 18em;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .section-intro {
+    margin-bottom: var(--space-6);
+  }
+
+  .approach {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 56rem) {
+    .approach {
+      grid-template-columns: 1fr 1.4fr;
+    }
+  }
+
+  .approach__list {
+    display: grid;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .approach__list h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+  }
+
+  .approach__list p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .audiences {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .audiences li {
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .testimonial {
+    margin: 0;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+  }
+
+  .testimonial figcaption {
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { phoneHref, site } from '../config/site';
+
+// The estimate form is a separate ticket (Formspree is proposed). Until it is
+// built and tested end to end, this page renders no form, so a visitor is
+// never told a request was sent when it was not.
+const { phone, email } = site.contact;
+---
+
+<BaseLayout
+  title="Request an Estimate"
+  description={`Request an estimate from ${site.legalName} for painting, accent walls, and property enhancement services.`}
+>
+  <PageHeader
+    eyebrow="Get started"
+    title="Request an estimate"
+    lead="Tell us about your property and the work you have in mind, and we will discuss next steps with you."
+  />
+
+  <Section labelledBy="estimate-details-heading" width="narrow">
+    <div class="prose">
+      <h2 id="estimate-details-heading">Helpful details to share</h2>
+      <ul>
+        <li>The type of property and the rooms or areas involved</li>
+        <li>The services you are interested in</li>
+        <li>Your general location in the Atlanta area</li>
+        <li>Your preferred timing</li>
+        <li>Photos of the space, if you have them</li>
+      </ul>
+
+      {phone || email ? (
+        <>
+          <h2>Contact us</h2>
+          <ul>
+            {phone && (
+              <li>
+                Phone: <a href={phoneHref(phone)}>{phone}</a>
+              </li>
+            )}
+            {email && (
+              <li>
+                Email: <a href={`mailto:${email}`}>{email}</a>
+              </li>
+            )}
+          </ul>
+        </>
+      ) : (
+        <p class="notice" role="note">
+          Online estimate requests are coming soon.
+        </p>
+      )}
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .notice {
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-surface-alt);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--radius-sm);
+  }
+</style>

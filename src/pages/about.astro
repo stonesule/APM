@@ -1,0 +1,36 @@
+---
+import EstimateCta from '../components/EstimateCta.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config/site';
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${site.legalName}, an interior design and property enhancement company serving ${site.market}.`}
+>
+  <PageHeader
+    eyebrow={site.tagline}
+    title={`About ${site.shortName}`}
+    lead={site.experienceStatement}
+  />
+
+  <Section labelledBy="about-heading" width="narrow">
+    <div class="prose">
+      <h2 id="about-heading">One trusted company for your property</h2>
+      <p>
+        {site.legalName} brings together professional painting, custom accent walls, and related
+        property enhancement services. Our clients include homeowners, property owners, real estate
+        investors, and commercial clients who value quality workmanship and dependable service.
+      </p>
+      <p>
+        Working with one company means fewer handoffs and a consistent standard of care across every
+        part of your project.
+      </p>
+      <!-- TODO(content): Add the approved company story, team approach, and photos. -->
+    </div>
+  </Section>
+
+  <EstimateCta />
+</BaseLayout>

@@ -1,0 +1,254 @@
+---
+import Button from './Button.astro';
+import { estimateCta, isCurrent, primaryNav } from '../config/navigation';
+import { site } from '../config/site';
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="brand" aria-label={`${site.legalName} home`}>
+      <span class="brand__name">{site.shortName}</span>
+      <span class="brand__tagline">{site.tagline}</span>
+    </a>
+
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      <span class="menu-toggle__icon" aria-hidden="true"></span>
+      <span class="menu-toggle__label">Menu</span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Main" data-menu>
+      <ul class="site-nav__list">
+        {primaryNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="site-nav__link"
+              aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li class="site-nav__cta">
+          <Button
+            href={estimateCta.href}
+            aria-current={isCurrent(estimateCta.href, pathname) ? 'page' : undefined}
+          >
+            {estimateCta.label}
+          </Button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Progressive enhancement: BaseLayout adds the `js` class to <html>. Without
+  // JavaScript the navigation stays visible and the toggle stays hidden.
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const header = toggle?.closest('header');
+  const mobile = window.matchMedia('(max-width: 47.99rem)');
+
+  if (toggle && menu && header) {
+    const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.dataset.open = String(open);
+    };
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Close when focus or a click moves outside the header.
+    const closeIfOutside = (event: Event) => {
+      if (isOpen() && !header.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('focusin', closeIfOutside);
+    document.addEventListener('click', closeIfOutside);
+
+    mobile.addEventListener('change', () => setOpen(false));
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+    min-height: var(--header-height);
+    padding-block: var(--space-2);
+  }
+
+  .brand {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: 1.1;
+  }
+
+  .brand__name {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .brand__tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .menu-toggle__icon,
+  .menu-toggle__icon::before,
+  .menu-toggle__icon::after {
+    display: block;
+    width: 1.1rem;
+    height: 2px;
+    background: currentColor;
+  }
+
+  .menu-toggle__icon {
+    position: relative;
+  }
+
+  .menu-toggle__icon::before,
+  .menu-toggle__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-toggle__icon::before {
+    top: -6px;
+  }
+
+  .menu-toggle__icon::after {
+    top: 6px;
+  }
+
+  [aria-expanded='true'] .menu-toggle__icon {
+    background: transparent;
+  }
+
+  [aria-expanded='true'] .menu-toggle__icon::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  [aria-expanded='true'] .menu-toggle__icon::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-nav__link {
+    display: inline-block;
+    padding-block: var(--space-2);
+    color: var(--color-text);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  .site-nav__link:hover,
+  .site-nav__link[aria-current='page'] {
+    border-bottom-color: var(--color-accent);
+  }
+
+  @media (max-width: 47.99rem) {
+    .site-header__inner {
+      column-gap: var(--space-3);
+    }
+
+    .site-nav {
+      flex-basis: 100%;
+    }
+
+    :global(.js) .menu-toggle {
+      display: inline-flex;
+    }
+
+    :global(.js) .site-nav:not([data-open='true']) {
+      display: none;
+    }
+
+    .site-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-block: var(--space-2) var(--space-4);
+    }
+
+    .site-nav__link {
+      display: block;
+      padding-block: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .site-nav__link[aria-current='page'] {
+      border-bottom-color: var(--color-border);
+      color: var(--color-accent);
+    }
+
+    .site-nav__cta {
+      margin-top: var(--space-4);
+    }
+
+    .site-nav__cta :global(.button) {
+      width: 100%;
+    }
+  }
+</style>
