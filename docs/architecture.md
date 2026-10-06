@@ -56,8 +56,9 @@ it doesn't need an APM backend either.
 validates and runs a Wrangler dry run, but never deploys. Commands,
 authentication, and rollback are covered in [deployment.md](deployment.md).
 
-**Status:** configured; first preview deployment pending (see
-[deployment.md](deployment.md) for the current account and URL).
+**Status:** preview deployed and verified at
+https://apm-website-preview.apminteriordesign.workers.dev (see
+[deployment.md](deployment.md) for the account, commit, and version).
 
 **Still pending:** APM ownership of the Cloudflare account; the production Worker
 or route for `apminteriordesign.com`,

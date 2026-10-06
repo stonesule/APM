@@ -127,8 +127,9 @@ not secrets. Never commit `.env`.
 ## Hosting
 
 Hosting is **configured for Cloudflare Workers static assets** (Free plan),
-with no Worker script, adapter, or backend. **Status: configured, awaiting the
-first preview deployment.** `wrangler.jsonc` defines one isolated
+with no Worker script, adapter, or backend. **Status: preview deployed and verified** at
+<https://apm-website-preview.apminteriordesign.workers.dev> (noindex). Production
+is not launched. `wrangler.jsonc` defines one isolated
 **preview** Worker, `apm-website-preview`, served on `workers.dev` only, with
 no route or custom domain for `apminteriordesign.com`. Unknown paths return the
 custom 404 page with HTTP 404.
