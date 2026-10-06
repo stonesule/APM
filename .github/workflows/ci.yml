@@ -37,5 +37,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      # This workflow never deploys. Deployment is handled by the hosting
-      # provider's Git integration once the hosting decision is final.
+      # Validates wrangler.jsonc and the preview build without uploading.
+      # Needs no Cloudflare credentials; none are configured in this repo.
+      - name: Check deployment configuration (dry run, no publish)
+        run: npm run deploy:check
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+
+      # This workflow never deploys. Preview deploys are manual
+      # (`npm run deploy:preview`); see docs/deployment.md.

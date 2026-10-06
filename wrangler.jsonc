@@ -1,0 +1,29 @@
+// Cloudflare Workers static assets — PREVIEW target only.
+//
+// This file intentionally defines a single, isolated preview Worker served on
+// its workers.dev URL. It has no routes and no custom domains, so it cannot
+// serve apminteriordesign.com. Production configuration is a separate ticket.
+//
+// There is no `main` script: Cloudflare serves files from ./dist directly, so
+// requests are free static asset requests and no Worker code runs.
+//
+// See docs/deployment.md for authentication, deploying, and rollback.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "apm-website-preview",
+  "compatibility_date": "2026-10-06",
+
+  // The account is selected with CLOUDFLARE_ACCOUNT_ID (see docs/deployment.md).
+  // Once APM's account is confirmed, its ID (not a secret) may be added here.
+
+  "workers_dev": true,
+  "preview_urls": false,
+
+  "assets": {
+    "directory": "./dist",
+    // Astro builds each route as <route>/index.html; serve it at /<route>/.
+    "html_handling": "auto-trailing-slash",
+    // Unknown paths get dist/404.html with HTTP 404 (not the homepage).
+    "not_found_handling": "404-page",
+  },
+}

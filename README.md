@@ -22,18 +22,22 @@ cp .env.example .env   # optional; every value may stay empty locally
 
 ## Commands
 
-| Command                | What it does                                                       |
-| ---------------------- | ------------------------------------------------------------------ |
-| `npm run dev`          | Start the dev server at http://localhost:4321                      |
-| `npm run check`        | Astro and TypeScript diagnostics                                   |
-| `npm run build`        | Production build to `dist/`                                        |
-| `npm run preview`      | Serve the production build locally                                 |
-| `npm run format`       | Format all files with Prettier                                     |
-| `npm run format:check` | Verify formatting (used in CI)                                     |
-| `npm run validate`     | Run `format:check`, `check`, and `build` (run before opening a PR) |
+| Command                           | What it does                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------- |
+| `npm run dev`                     | Start the dev server at http://localhost:4321                                   |
+| `npm run check`                   | Astro and TypeScript diagnostics                                                |
+| `npm run build`                   | Production build to `dist/`                                                     |
+| `npm run preview`                 | Serve the production build locally                                              |
+| `npm run format`                  | Format all files with Prettier                                                  |
+| `npm run format:check`            | Verify formatting (used in CI)                                                  |
+| `npm run validate`                | Run `format:check`, `check`, and `build` (run before opening a PR)              |
+| `npm run preview:worker`          | Preview build served through Wrangler at http://localhost:8787                  |
+| `npm run deploy:check`            | Preview build + Wrangler dry run (no publish, no login needed)                  |
+| `npm run verify:hosting -- <url>` | HTTP checks against a running site (local or deployed)                          |
+| `npm run deploy:preview`          | **Publishes** the preview Worker (see [docs/deployment.md](docs/deployment.md)) |
 
 CI (`.github/workflows/ci.yml`) runs the same checks on every pull request and on
-pushes to `main`. CI does not deploy.
+pushes to `main`, plus a Wrangler dry run. CI does not deploy.
 
 ## Project structure
 
@@ -116,29 +120,26 @@ not secrets. Never commit `.env`.
 
 | Variable                   | Purpose                                                                 |
 | -------------------------- | ----------------------------------------------------------------------- |
-| `PUBLIC_SITE_URL`          | Production URL for canonical and Open Graph tags (domain pending)       |
+| `PUBLIC_SITE_URL`          | Production URL for canonical/OG tags; production only, not previews     |
 | `PUBLIC_ALLOW_INDEXING`    | `true` only on the production deployment; otherwise pages are `noindex` |
 | `PUBLIC_FORMSPREE_FORM_ID` | Reserved for the estimate form ticket; the scaffold renders no form     |
 
 ## Hosting
 
-Cloudflare is the intended host. Whether to use **Workers static assets**
-(Cloudflare's current recommendation) or **Pages** (the earlier proposal) is a
-pending decision, and nothing is provisioned yet. The build works on either:
+The site is hosted on **Cloudflare Workers static assets** (Free plan), with
+no Worker script, adapter, or backend. `wrangler.jsonc` defines one isolated
+**preview** Worker, `apm-website-preview`, served on `workers.dev` only, with
+no route or custom domain for `apminteriordesign.com`. Unknown paths return the
+custom 404 page with HTTP 404.
 
-| Setting          | Value                                           |
-| ---------------- | ----------------------------------------------- |
-| Build command    | `npm run build`                                 |
-| Output directory | `dist`                                          |
-| Node version     | 24 (`.nvmrc`, or set `NODE_VERSION=24`)         |
-| Production env   | `PUBLIC_SITE_URL`, `PUBLIC_ALLOW_INDEXING=true` |
-
-Workers also needs a `wrangler.jsonc` and deploy command `npx wrangler deploy`.
-See [docs/architecture.md](docs/architecture.md#hosting-pending-decision) for the
-full settings for each option.
+Deploys are manual: `npm run deploy:preview` validates, forces `noindex`,
+rebuilds, and publishes. It requires `CLOUDFLARE_ACCOUNT_ID` (APM's account)
+and a clean working tree. Authentication, account selection, redeploying, and
+rollback are covered in [docs/deployment.md](docs/deployment.md). Production
+launch (domain, DNS) is a separate ticket.
 
 ## Pending client inputs
 
-Contact details, service area, domain, photos, testimonials, review links, logo,
+Contact details, service area, production DNS and launch, photos, testimonials, review links, logo,
 service scope, and the hosting choice are all pending. The full list, with where
 each value goes, is in [docs/pending-inputs.md](docs/pending-inputs.md).
