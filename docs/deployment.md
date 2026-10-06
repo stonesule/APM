@@ -4,16 +4,18 @@ The site is hosted as a **static-assets-only Cloudflare Worker**: Cloudflare
 serves the files Astro builds into `dist/`. No Worker script, server rendering,
 or backend runs. Configuration lives in `wrangler.jsonc`.
 
-Only the **preview** target exists today. It is served on a `workers.dev` URL,
-has no routes or custom domains, and cannot serve `apminteriordesign.com`.
-Production launch (custom domain, DNS) is a separate ticket.
+Only the **preview** target exists. It is served on a `workers.dev` URL, has no
+routes or custom domains, and cannot serve `apminteriordesign.com`. Production
+launch (custom domain, DNS) is a separate ticket.
 
-| Target  | Worker name           | URL                                                           | Indexed?              |
-| ------- | --------------------- | ------------------------------------------------------------- | --------------------- |
-| Preview | `apm-website-preview` | `https://apm-website-preview.<account-subdomain>.workers.dev` | No (`noindex` forced) |
+**Status:** configured, awaiting the first preview deployment.
 
-The `<account-subdomain>` is the account's workers.dev subdomain, chosen in the
-Cloudflare dashboard (Workers & Pages → Overview) the first time Workers is used.
+| Target  | Worker name           | URL                                                         | Indexed?              |
+| ------- | --------------------- | ----------------------------------------------------------- | --------------------- |
+| Preview | `apm-website-preview` | `https://apm-website-preview.apminteriordesign.workers.dev` | No (`noindex` forced) |
+
+The account's workers.dev subdomain is `apminteriordesign`, created on
+2026-10-06. Changing it later changes every workers.dev URL in the account.
 
 ## Commands
 
@@ -29,12 +31,24 @@ Cloudflare dashboard (Workers & Pages → Overview) the first time Workers is us
 
 `deploy:preview` refuses to run unless `CLOUDFLARE_ACCOUNT_ID` is set and the
 working tree is clean (`scripts/check-deploy-ready.mjs`). Each deployment's
-version is tagged with the short commit hash, so every live version maps to a
-reviewed commit.
+version is tagged with the short commit hash, which **identifies the commit that
+was deployed**. A clean tree only guarantees the build matches that commit; it
+does not prove the commit was reviewed. Deploy commits that have passed review
+and CI (normally `main`, or a PR branch under review).
 
 These scripts use POSIX shell syntax (macOS, Linux, WSL, or Git Bash).
 
 ## Account ownership and access
+
+**Current state (verified 2026-10-06):** the preview is hosted in Cloudflare
+account `Sule.stone1024@gmail.com's Account` (ID
+`0ce9e34b…c0ec14`; full ID via `npm run cf:whoami`), Free plan. That account also holds the
+`apminteriordesign.com` zone. Sule designated it for APM hosting. Its only
+member is Sule (Super Administrator), and APM/Alonza is not yet a member. Billing
+ownership could not be read with the available token. Bringing it in line with
+the target below is a launch dependency (see pending-inputs.md).
+
+Target:
 
 - The Cloudflare account must be **owned by APM** (Alonza), on the Free plan,
   with APM's billing. Sule is invited as a member
@@ -94,11 +108,11 @@ Option A, roll back to an earlier uploaded version (fastest, no rebuild):
 
 ```sh
 npx wrangler deployments list     # recent deployments, with version IDs
-npx wrangler versions list        # versions, tagged with the commit hash
+npx wrangler versions list        # versions, tagged with the deployed commit hash
 npx wrangler rollback <version-id> --message "Roll back to <commit>"
 ```
 
-Option B, rebuild a specific reviewed commit:
+Option B, rebuild a specific commit (pick one that passed review and CI):
 
 ```sh
 git switch --detach <commit>

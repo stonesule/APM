@@ -126,20 +126,22 @@ not secrets. Never commit `.env`.
 
 ## Hosting
 
-The site is hosted on **Cloudflare Workers static assets** (Free plan), with
-no Worker script, adapter, or backend. `wrangler.jsonc` defines one isolated
+Hosting is **configured for Cloudflare Workers static assets** (Free plan),
+with no Worker script, adapter, or backend. **Status: configured, awaiting the
+first preview deployment.** `wrangler.jsonc` defines one isolated
 **preview** Worker, `apm-website-preview`, served on `workers.dev` only, with
 no route or custom domain for `apminteriordesign.com`. Unknown paths return the
 custom 404 page with HTTP 404.
 
 Deploys are manual: `npm run deploy:preview` validates, forces `noindex`,
-rebuilds, and publishes. It requires `CLOUDFLARE_ACCOUNT_ID` (APM's account)
-and a clean working tree. Authentication, account selection, redeploying, and
+rebuilds, and publishes. It requires `CLOUDFLARE_ACCOUNT_ID` (the account
+designated for APM hosting) and a clean working tree. Authentication, account selection, redeploying, and
 rollback are covered in [docs/deployment.md](docs/deployment.md). Production
 launch (domain, DNS) is a separate ticket.
 
 ## Pending client inputs
 
-Contact details, service area, production DNS and launch, photos, testimonials, review links, logo,
-service scope, and the hosting choice are all pending. The full list, with where
-each value goes, is in [docs/pending-inputs.md](docs/pending-inputs.md).
+Contact details, service area, production DNS and launch, photos, testimonials,
+review links, logo, service scope, and transfer of the Cloudflare account to APM
+ownership are pending. The full list, with where each value goes, is in
+[docs/pending-inputs.md](docs/pending-inputs.md).
