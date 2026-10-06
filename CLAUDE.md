@@ -11,7 +11,11 @@ nvm use            # Node 24 (.nvmrc)
 npm run validate   # format:check + astro check + build
 ```
 
-Run `npm run format` to fix formatting. CI runs the same steps and never deploys.
+Run `npm run format` to fix formatting. CI runs the same steps plus a Wrangler
+dry run, and never deploys.
+
+Hosting checks (no publishing): `npm run deploy:check`, then
+`npm run preview:worker` and `npm run verify:hosting -- http://localhost:8787`.
 
 ## Technical conventions
 
@@ -40,6 +44,16 @@ Run `npm run format` to fix formatting. CI runs the same steps and never deploys
 - Unknown phone, email, service area, review links, and photos stay `null`/empty
   and are not rendered. Never add dummy contact details or `#` links.
 - Never render a form that reports success without confirmed delivery.
+
+## Deployment rules
+
+- Hosting is Cloudflare Workers static assets; see docs/deployment.md.
+- `wrangler.jsonc` defines the preview Worker only. Never add routes, custom
+  domains, or a production target for apminteriordesign.com without a ticket.
+- Only deploy with `npm run deploy:preview`, into APM's Cloudflare account
+  (`CLOUDFLARE_ACCOUNT_ID`). Never use a personal account or `--temporary`,
+  and never commit tokens.
+- Don't add deploy steps to GitHub Actions.
 
 ## Out of scope unless requested
 
