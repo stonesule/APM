@@ -1,30 +1,138 @@
 ---
+import Button from '../../components/Button.astro';
 import EstimateCta from '../../components/EstimateCta.astro';
-import PageHeader from '../../components/PageHeader.astro';
+import FeatureSplit from '../../components/FeatureSplit.astro';
+import PendingNote from '../../components/PendingNote.astro';
+import PhotoSlot from '../../components/PhotoSlot.astro';
+import ProcessSteps from '../../components/ProcessSteps.astro';
 import Section from '../../components/Section.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getService } from '../../config/services';
+import { audiences, getService } from '../../config/services';
 
 const service = getService('painting');
+const clientList = new Intl.ListFormat('en', { type: 'conjunction' }).format(
+  audiences.map((audience) => audience.toLowerCase()),
+);
+
+const focus = [
+  {
+    title: 'Preparation',
+    text: 'Good painting starts before the first coat, with surfaces made ready for an even finish.',
+  },
+  {
+    title: 'Protection',
+    text: 'We take care to protect your space and belongings while the work is underway.',
+  },
+  {
+    title: 'A clean finish',
+    text: 'Careful application and attention to edges and details, so the result looks right.',
+  },
+];
 ---
 
 <BaseLayout title={service.title} description={service.summary}>
-  <PageHeader eyebrow="Our core specialty" title={service.title} lead={service.summary} />
-
-  <Section labelledBy="painting-approach-heading" width="narrow">
-    <div class="prose">
-      <h2 id="painting-approach-heading">How we approach painting</h2>
-      <p>
-        Good painting starts long before the first coat. We focus on preparation, protecting your
-        space, and careful application so the result is clean and consistent.
-      </p>
-      <h2>Who we paint for</h2>
-      <p>
-        We work with homeowners, property owners, real estate investors, and commercial clients.
-      </p>
-      <!-- TODO(content): Confirm painting scope (interior, exterior, cabinets, commercial) and add approved project photos. -->
+  <section class="intro" aria-labelledby="painting-title">
+    <div class="container">
+      <FeatureSplit mediaWidth="large" reverse>
+        <PhotoSlot
+          slot="media"
+          label="Professional painting"
+          note="Finished painted room, ideally with natural light."
+          ratio="4/3"
+          loading="eager"
+        />
+        <p class="eyebrow">Our core specialty</p>
+        <h1 id="painting-title">{service.title}</h1>
+        <p class="lead">{service.summary}</p>
+        <div class="actions intro__actions">
+          <Button href="/request-estimate/">Tell us about your project</Button>
+        </div>
+      </FeatureSplit>
     </div>
+  </section>
+
+  <Section tone="light" labelledBy="painting-focus-heading">
+    <div class="section-heading">
+      <h2 id="painting-focus-heading">How we approach painting</h2>
+    </div>
+    <ul class="focus">
+      {focus.map((item) => (
+        <li>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section labelledBy="painting-scope-heading">
+    <div class="scope">
+      <div>
+        <h2 id="painting-scope-heading">Who we paint for</h2>
+        <p>We work with {clientList}.</p>
+      </div>
+      <PendingNote title="Painting scope — pending confirmation" items={service.pendingDetails} />
+    </div>
+    <div class="gallery">
+      <PhotoSlot label="Painting detail" note="Close-up of trim, edges, or finish." ratio="1/1" />
+      <PhotoSlot label="Painted room" note="A second finished space." ratio="1/1" />
+    </div>
+  </Section>
+
+  <Section tone="alt" labelledBy="painting-process-heading">
+    <div class="section-heading">
+      <h2 id="painting-process-heading">How a project comes together</h2>
+    </div>
+    <ProcessSteps />
   </Section>
 
   <EstimateCta heading="Ready to talk about painting?" />
 </BaseLayout>
+
+<style>
+  .intro {
+    padding-block: var(--space-7) var(--section-space);
+  }
+
+  .intro__actions {
+    margin-top: var(--space-5);
+  }
+
+  .focus {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .focus li {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-control-border);
+  }
+
+  .focus p {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  .scope {
+    display: grid;
+    gap: var(--space-6);
+    margin-bottom: var(--space-7);
+  }
+
+  @media (min-width: 56rem) {
+    .scope {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .gallery {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+</style>

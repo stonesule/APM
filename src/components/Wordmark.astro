@@ -1,0 +1,46 @@
+---
+/**
+ * Provisional text wordmark. Replace the contents of this component with the
+ * approved APM logo (e.g. an inline SVG or <Image>) when it is supplied; the
+ * header and footer pick it up automatically.
+ */
+export interface Props {
+  tone?: 'default' | 'on-green';
+}
+
+const { tone = 'default' } = Astro.props;
+---
+
+<span class:list={['wordmark', `wordmark--${tone}`]}>
+  <span class="wordmark__name">APM</span>
+  <span class="wordmark__descriptor">Interior Design</span>
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    color: var(--color-text);
+  }
+
+  .wordmark--on-green {
+    color: var(--color-on-green);
+  }
+
+  .wordmark__name {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .wordmark__descriptor {
+    margin-top: 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+</style>

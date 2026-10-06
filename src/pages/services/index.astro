@@ -1,47 +1,104 @@
 ---
+import Button from '../../components/Button.astro';
 import EstimateCta from '../../components/EstimateCta.astro';
+import FeatureSplit from '../../components/FeatureSplit.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import PendingNote from '../../components/PendingNote.astro';
+import PhotoSlot from '../../components/PhotoSlot.astro';
 import Section from '../../components/Section.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { services } from '../../config/services';
+import { getService, servicesByTier } from '../../config/services';
 import { site } from '../../config/site';
 
-const featured = services.filter((service) => service.featured);
-const additional = services.filter((service) => !service.featured);
+const painting = getService('painting');
+const accentWalls = getService('accent-walls');
+const supporting = servicesByTier('supporting');
 ---
 
 <BaseLayout
   title="Services"
-  description={`Professional painting, custom accent walls, and coordinated property enhancement services from ${site.legalName}.`}
+  description={`Professional painting, custom accent walls, interior design, and coordinated property enhancement services from ${site.legalName}.`}
 >
   <PageHeader
     eyebrow={site.tagline}
-    title="Our services"
-    lead="From a single room to a full property refresh, APM coordinates the work so it is finished together and finished well."
+    title="Refresh. Refine. Reimagine."
+    lead="From a single room to a full property refresh, we coordinate the work so it is finished together and finished well."
   />
 
-  <Section labelledBy="specialties-heading">
-    <h2 id="specialties-heading">Design and finish</h2>
-    <div class="grid">
-      {featured.map((service) => (
-        <ServiceCard service={service} />
-      ))}
-    </div>
+  <Section labelledBy="painting-heading">
+    <FeatureSplit mediaWidth="large">
+      <PhotoSlot
+        slot="media"
+        label="Professional painting"
+        note="Wide photo of a finished painted interior."
+        ratio="4/3"
+      />
+      <p class="eyebrow">Our core specialty</p>
+      <h2 id="painting-heading">{painting.title}</h2>
+      <p class="lead">{painting.summary}</p>
+      <p>
+        Painting is the foundation of our work. We focus on preparation, protecting your space, and
+        careful application, so the finished result is clean and consistent.
+      </p>
+      <PendingNote items={painting.pendingDetails} class="feature__pending" />
+      <div class="actions feature__actions">
+        <Button href={painting.href ?? '/services/'}>Explore painting</Button>
+      </div>
+    </FeatureSplit>
   </Section>
 
-  <Section tone="alt" labelledBy="additional-heading">
-    <h2 id="additional-heading">Property enhancement</h2>
-    <p class="lead">
-      Related services we can coordinate with your project. Ask about your specific needs when you
-      request an estimate.
-    </p>
-    <div class="grid">
-      {additional.map((service) => (
-        <ServiceCard service={service} />
+  <Section tone="light" labelledBy="accent-heading">
+    <FeatureSplit reverse>
+      <PhotoSlot
+        slot="media"
+        label="Custom accent wall"
+        note="Finished feature wall in a styled room."
+        ratio="4/5"
+      />
+      <p class="eyebrow">Design detail</p>
+      <h2 id="accent-heading">{accentWalls.title}</h2>
+      <p class="lead">{accentWalls.summary}</p>
+      <PendingNote items={accentWalls.pendingDetails} class="feature__pending" />
+      <div class="actions feature__actions">
+        <Button href={accentWalls.href ?? '/services/'} variant="secondary">
+          Explore accent walls
+        </Button>
+      </div>
+    </FeatureSplit>
+  </Section>
+
+  <Section labelledBy="supporting-heading">
+    <div class="section-heading" id="supporting">
+      <p class="eyebrow">Property enhancement</p>
+      <h2 id="supporting-heading">Supporting services</h2>
+      <p class="lead">
+        Related services we coordinate alongside your project, so you can rely on one company for
+        the details.
+      </p>
+    </div>
+    <div class="supporting">
+      {supporting.map((service) => (
+        <ServiceCard service={service} showPending />
       ))}
     </div>
   </Section>
 
   <EstimateCta />
 </BaseLayout>
+
+<style>
+  :global(.feature__pending) {
+    margin-block: var(--space-5);
+  }
+
+  .feature__actions {
+    margin-top: var(--space-5);
+  }
+
+  .supporting {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+</style>

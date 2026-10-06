@@ -2,85 +2,153 @@
 import { getCollection } from 'astro:content';
 import Button from '../components/Button.astro';
 import EstimateCta from '../components/EstimateCta.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
 import Section from '../components/Section.astro';
-import ServiceCard from '../components/ServiceCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { estimateCta } from '../config/navigation';
-import { audiences, services } from '../config/services';
-import { site } from '../config/site';
+import { getService, servicesByTier } from '../config/services';
 
+const painting = getService('painting');
+const accentWalls = getService('accent-walls');
+const supporting = servicesByTier('supporting');
 const testimonials = await getCollection('testimonials', ({ data }) => !data.draft);
+
+const values = [
+  'Thoughtful design',
+  'Quality workmanship',
+  'Dependable service',
+  'One trusted company',
+];
+
+const detailSlots = [
+  { label: 'Painting detail', note: 'Close-up of a finished painted surface or trim.' },
+  { label: 'Accent wall detail', note: 'Texture or pattern from a finished accent wall.' },
+  { label: 'Finished room', note: 'A completed space showing the overall result.' },
+];
 ---
 
 <BaseLayout>
   <section class="hero" aria-labelledby="hero-heading">
-    <div class="container hero__inner">
-      <p class="eyebrow">{site.tagline}</p>
-      <h1 id="hero-heading">Thoughtful design. Quality craftsmanship. One trusted company.</h1>
-      <p class="lead">
-        APM provides professional painting, custom accent walls, and coordinated property
-        enhancement services for homes and properties across {site.market}.
-      </p>
-      <div class="hero__actions">
-        <Button href={estimateCta.href}>{estimateCta.label}</Button>
-        <Button href="/services/" variant="secondary">
-          Explore Our Services
-        </Button>
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">Interior Design &amp; Property Enhancement</p>
+        <h1 id="hero-heading">Thoughtful spaces. Beautifully finished.</h1>
+        <p class="lead">
+          Professional painting, distinctive accent walls, and coordinated interior services—through
+          one trusted company.
+        </p>
+        <div class="actions hero__actions">
+          <Button href="/request-estimate/">Tell us about your project</Button>
+          <Button href="/projects/" variant="secondary">
+            Explore our work
+          </Button>
+        </div>
       </div>
+      <PhotoSlot
+        class="hero__photo"
+        label="Finished interior"
+        note="Large hero photo of a completed, well-lit room."
+        ratio="4/5"
+        loading="eager"
+      />
     </div>
   </section>
 
-  <Section labelledBy="services-heading">
-    <div class="section-intro">
-      <h2 id="services-heading">Our services</h2>
-      <p class="lead">
-        Painting is our core specialty. We also coordinate the related work that brings a space
-        together, so you can rely on one team from start to finish.
-      </p>
-    </div>
-    <div class="grid">
-      {services.map((service) => (
-        <ServiceCard service={service} />
-      ))}
-    </div>
-  </Section>
-
-  <Section tone="alt" labelledBy="approach-heading">
-    <div class="approach">
-      <div>
-        <h2 id="approach-heading">Why clients choose APM</h2>
-        <p>{site.experienceStatement}</p>
-      </div>
-      <ul class="approach__list">
-        <li>
-          <h3>Quality workmanship</h3>
-          <p>We take care with preparation and detail so the finished work looks right.</p>
-        </li>
-        <li>
-          <h3>Dependable service</h3>
-          <p>We communicate clearly and follow through on what we agree to do.</p>
-        </li>
-        <li>
-          <h3>Coordinated services</h3>
-          <p>Painting, accent walls, and related tasks are planned together by one company.</p>
-        </li>
-      </ul>
-    </div>
-  </Section>
-
-  <Section labelledBy="audiences-heading">
-    <h2 id="audiences-heading">Who we work with</h2>
-    <ul class="audiences">
-      {audiences.map((audience) => (
-        <li>{audience}</li>
+  <section class="values" aria-label="What we stand for">
+    <ul class="container values__list">
+      {values.map((value) => (
+        <li>{value}</li>
       ))}
     </ul>
+  </section>
+
+  <Section labelledBy="services-heading">
+    <div class="section-heading">
+      <p class="eyebrow">Our services</p>
+      <h2 id="services-heading">Refresh. Refine. Reimagine.</h2>
+      <p class="lead">
+        Painting is at the heart of what we do. We also coordinate the related work that brings a
+        space together, so you can rely on one company from start to finish.
+      </p>
+    </div>
+
+    <div class="services">
+      <article class="service service--core">
+        <PhotoSlot label="Professional painting" note="Freshly painted interior." ratio="4/3" />
+        <div class="service__body">
+          <p class="eyebrow">Our core specialty</p>
+          <h3>
+            <a href={painting.href ?? '/services/'}>{painting.title}</a>
+          </h3>
+          <p>{painting.summary}</p>
+          <span class="service__more" aria-hidden="true">
+            Learn more →
+          </span>
+        </div>
+      </article>
+
+      <article class="service">
+        <PhotoSlot label="Custom accent wall" note="Finished feature wall." ratio="4/3" />
+        <div class="service__body">
+          <h3>
+            <a href={accentWalls.href ?? '/services/'}>{accentWalls.title}</a>
+          </h3>
+          <p>{accentWalls.summary}</p>
+          <span class="service__more" aria-hidden="true">
+            Learn more →
+          </span>
+        </div>
+      </article>
+
+      <article class="service service--supporting">
+        <div class="service__body">
+          <h3>
+            <a href="/services/#supporting">Property enhancement &amp; supporting services</a>
+          </h3>
+          <p>Related services we coordinate with your project:</p>
+          <ul class="service__list">
+            {supporting.map((service) => (
+              <li>{service.title}</li>
+            ))}
+          </ul>
+          <span class="service__more" aria-hidden="true">
+            View all services →
+          </span>
+        </div>
+      </article>
+    </div>
+  </Section>
+
+  <Section tone="light" labelledBy="details-heading">
+    <div class="section-heading">
+      <p class="eyebrow">Our work</p>
+      <h2 id="details-heading">A closer look at the details.</h2>
+      <p class="lead">Approved project photography will appear here.</p>
+    </div>
+    <div class="details">
+      {detailSlots.map((slot) => (
+        <PhotoSlot label={slot.label} note={slot.note} ratio="4/5" />
+      ))}
+    </div>
+    <div class="actions details__actions">
+      <Button href="/projects/" variant="secondary">
+        Explore our work
+      </Button>
+    </div>
+  </Section>
+
+  <Section labelledBy="process-heading">
+    <div class="section-heading">
+      <p class="eyebrow">How we work</p>
+      <h2 id="process-heading">A simple, considered process.</h2>
+    </div>
+    <ProcessSteps />
   </Section>
 
   {testimonials.length > 0 && (
     <Section tone="alt" labelledBy="testimonials-heading">
       <h2 id="testimonials-heading">What our clients say</h2>
-      <div class="grid">
+      <div class="testimonials">
         {testimonials.map((entry) => (
           <figure class="testimonial">
             <blockquote set:html={entry.rendered?.html ?? ''} />
@@ -96,76 +164,147 @@ const testimonials = await getCollection('testimonials', ({ data }) => !data.dra
 
 <style>
   .hero {
-    padding-block: var(--space-8);
-    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
-    border-bottom: 1px solid var(--color-border);
+    padding-block: var(--space-7) var(--section-space);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .hero__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
   }
 
   .hero h1 {
-    max-width: 18em;
+    max-width: 11em;
   }
 
   .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
     margin-top: var(--space-6);
   }
 
-  .section-intro {
-    margin-bottom: var(--space-6);
+  .values {
+    border-block: 1px solid var(--color-border);
+    background: var(--color-surface);
   }
 
-  .approach {
+  .values__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--space-3) var(--space-5);
+    margin-block: 0;
+    padding-block: var(--space-5);
+    list-style: none;
+  }
+
+  .values__list li {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .services {
     display: grid;
     gap: var(--space-6);
   }
 
   @media (min-width: 56rem) {
-    .approach {
-      grid-template-columns: 1fr 1.4fr;
+    .services {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service--core {
+      grid-row: span 2;
     }
   }
 
-  .approach__list {
+  .service {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+  }
+
+  .service--core :global(.photo-slot) {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 18rem;
+  }
+
+  .service--supporting {
+    background: var(--color-surface-alt);
+  }
+
+  .service__body {
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .service h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .service h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .service h3 a:focus-visible {
+    outline: none;
+  }
+
+  .service h3 a:focus-visible::after {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  .service p {
+    color: var(--color-text-secondary);
+  }
+
+  .service__list {
+    margin-bottom: var(--space-5);
+    padding-left: 1.1rem;
+    color: var(--color-text);
+  }
+
+  .service__more {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .service:hover .service__more {
+    text-decoration: underline;
+  }
+
+  .details {
     display: grid;
     gap: var(--space-5);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   }
 
-  .approach__list h3 {
-    font-size: var(--text-lg);
-    margin-bottom: var(--space-2);
+  .details__actions {
+    margin-top: var(--space-6);
   }
 
-  .approach__list p {
-    margin: 0;
-    color: var(--color-text-muted);
-  }
-
-  .audiences {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .audiences li {
-    padding: var(--space-2) var(--space-4);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
+  .testimonials {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
   }
 
   .testimonial {
     margin: 0;
-    padding: var(--space-5);
+    padding: var(--space-6);
     background: var(--color-surface);
-    border-radius: var(--radius-md);
   }
 
   .testimonial figcaption {

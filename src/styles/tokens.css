@@ -1,38 +1,46 @@
 /*
- * Design tokens. Change brand colors, type, and spacing here.
- * Measured contrast (WCAG 2.2, AA needs 4.5:1 for text):
- *   --color-text on --color-bg 15.6:1; --color-text-muted on --color-bg 8.1:1;
- *   --color-accent on --color-bg 5.8:1 (5.3:1 on --color-surface-alt);
- *   white on --color-primary 13.2:1; --color-focus on --color-bg 6.2:1.
+ * Design tokens (AMP-5 provisional palette). Change brand colors, type, and
+ * spacing here. Measured contrast (WCAG 2.2, AA needs 4.5:1 for text,
+ * 3:1 for UI boundaries and focus indicators):
+ *   --color-text on --color-bg 10.8:1 (9.6:1 on --color-surface-alt)
+ *   --color-text-secondary on --color-bg 5.6:1 (5.0:1 on --color-surface-alt)
+ *   --color-accent on --color-bg 6.0:1 (5.3:1 on --color-surface-alt)
+ *   --color-on-green on --color-green 10.2:1 (13.4:1 on --color-green-deep)
+ *   --color-border is decorative only (1.3:1); controls use
+ *   --color-control-border (5.6:1).
  * Re-check contrast whenever a color changes.
  */
 :root {
-  /* Palette: warm neutrals with a deep slate primary and clay accent. */
-  --color-bg: #f8f6f2;
-  --color-surface: #ffffff;
-  --color-surface-alt: #efebe4;
-  --color-border: #d9d3c9;
-  --color-text: #1f1d1a;
-  --color-text-muted: #4f4a43;
-  --color-primary: #263238;
-  --color-primary-hover: #37474f;
-  --color-on-primary: #ffffff;
-  --color-accent: #8a5232;
-  --color-focus: #1b5e9b;
+  --color-bg: #f6f3ed;
+  --color-surface-alt: #ebe6db;
+  --color-surface: #fffcf7;
+  --color-text: #263b32;
+  --color-text-secondary: #59645a;
+  --color-green: #2c4437;
+  --color-green-hover: #233629;
+  --color-green-deep: #1f3027;
+  --color-on-green: #fffaf0;
+  --color-accent: #795540;
+  --color-border: #d6d7ca;
+  --color-control-border: #59645a;
+  --color-focus: #795540;
+  --color-focus-on-green: #fffaf0;
 
-  /* Typography: system stacks, no web-font requests. */
+  /* Typography: system stacks only, no web-font requests. */
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-heading: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-heading: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
 
-  --text-sm: 0.875rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
   --text-base: 1.0625rem;
-  --text-lg: 1.25rem;
-  --text-xl: clamp(1.4rem, 1.2rem + 0.8vw, 1.75rem);
-  --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --text-3xl: clamp(2.1rem, 1.6rem + 2.4vw, 3.4rem);
+  --text-lg: 1.1875rem;
+  --text-xl: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+  --text-2xl: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+  --text-3xl: clamp(2.375rem, 1.7rem + 3vw, 4rem);
 
-  --leading-tight: 1.15;
-  --leading-normal: 1.6;
+  --leading-tight: 1.12;
+  --leading-normal: 1.65;
+  --tracking-caps: 0.14em;
 
   /* Spacing scale. */
   --space-1: 0.25rem;
@@ -43,14 +51,13 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4.5rem;
+  --space-9: 7rem;
 
-  --container-max: 72rem;
+  --section-space: clamp(4rem, 3rem + 5vw, 7.5rem);
+  --container-max: 76rem;
   --container-narrow: 46rem;
-  --gutter: clamp(1rem, 4vw, 2rem);
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --shadow-card: 0 1px 2px rgb(31 29 26 / 6%), 0 4px 12px rgb(31 29 26 / 6%);
-
-  --header-height: 4.25rem;
+  --radius: 2px;
+  --header-height: 4.75rem;
 }

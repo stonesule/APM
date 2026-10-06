@@ -43,7 +43,13 @@ Hosting checks (no publishing): `npm run deploy:check`, then
   founding year. The "25+ years of repeat clients" line is client-reported.
 - Unknown phone, email, service area, review links, and photos stay `null`/empty
   and are not rendered. Never add dummy contact details or `#` links.
-- Never render a form that reports success without confirmed delivery.
+- Never render a form that reports success without confirmed delivery. The
+  estimate page is a disabled layout with no `<form>` until the form ticket.
+- Placeholders must look like placeholders: use `PhotoSlot` for photos and
+  `PendingNote` / `pendingDetails` for unconfirmed details. Never present a
+  placeholder as completed APM work.
+- Text on green (`--color-green*`) sets its color explicitly to
+  `--color-on-green`; never rely on inherited heading colors.
 
 ## Deployment rules
 

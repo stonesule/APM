@@ -72,11 +72,20 @@ Routes: `/`, `/services/`, `/services/painting/`, `/services/accent-walls/`,
 - **Business details** (phone, email, service areas, review links): edit
   `src/config/site.ts`. A value left as `null` or `[]` is simply not shown, so
   never add a placeholder like "555-0100".
+- **Logo**: the provisional wordmark lives in `src/components/Wordmark.astro`.
+  Replace its contents with the approved logo; the header and footer update.
+- **Photos**: every photo area is a `PhotoSlot` component showing a labelled
+  placeholder. To use an approved photo, add it under `src/assets/photos/`,
+  import it in the page, and pass `image={photo}` with descriptive `alt` text.
+  Astro optimizes it at build time.
+- **Pending details**: unconfirmed service scope and copy are shown with
+  `PendingNote` (or a service's `pendingDetails` list). Remove them as details
+  are confirmed. They are intended for the review preview, not launch.
 - **Services**: edit `src/config/services.ts`. Cards on the homepage and
   `/services/` update automatically. Detail-page copy is in
   `src/pages/services/`.
 - **Navigation**: edit `src/config/navigation.ts`.
-- **Colors and typography**: edit `src/styles/tokens.css`, then re-check text
+- **Colors and typography** (provisional AMP-5 palette): edit `src/styles/tokens.css`, then re-check text
   contrast (WCAG AA: 4.5:1 for body text).
 - **Projects**: add `src/content/projects/<slug>.md`:
 

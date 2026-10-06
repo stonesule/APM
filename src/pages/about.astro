@@ -1,9 +1,31 @@
 ---
 import EstimateCta from '../components/EstimateCta.astro';
+import FeatureSplit from '../components/FeatureSplit.astro';
 import PageHeader from '../components/PageHeader.astro';
+import PendingNote from '../components/PendingNote.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../config/site';
+
+const principles = [
+  {
+    title: 'Creativity',
+    text: 'We bring ideas to the table, helping each space feel considered and personal.',
+  },
+  {
+    title: 'Craftsmanship',
+    text: 'Careful preparation and attention to detail are part of every project.',
+  },
+  {
+    title: 'Dependable service',
+    text: 'We communicate clearly and follow through on what we agree to do.',
+  },
+  {
+    title: 'Lasting relationships',
+    text: 'Much of our work comes from repeat clients and referrals, and we value that trust.',
+  },
+];
 ---
 
 <BaseLayout
@@ -12,25 +34,92 @@ import { site } from '../config/site';
 >
   <PageHeader
     eyebrow={site.tagline}
-    title={`About ${site.shortName}`}
-    lead={site.experienceStatement}
+    title="Creativity and craftsmanship, from one trusted company."
+    lead="APM brings professional painting, custom accent walls, and coordinated interior services together, so every part of your project is held to the same standard."
   />
 
-  <Section labelledBy="about-heading" width="narrow">
-    <div class="prose">
-      <h2 id="about-heading">One trusted company for your property</h2>
+  <Section labelledBy="story-heading">
+    <FeatureSplit>
+      <PhotoSlot
+        slot="media"
+        label="APM at work"
+        note="Approved APM photograph (team or work in progress)."
+        ratio="4/5"
+      />
+      <p class="eyebrow">Who we are</p>
+      <h2 id="story-heading">Built on relationships</h2>
       <p>
-        {site.legalName} brings together professional painting, custom accent walls, and related
-        property enhancement services. Our clients include homeowners, property owners, real estate
-        investors, and commercial clients who value quality workmanship and dependable service.
+        Our business has grown through repeat clients and referrals. Homeowners, property owners,
+        real estate investors, and commercial clients return to us because they can count on
+        thoughtful design, quality workmanship, and dependable service.
       </p>
-      <p>
-        Working with one company means fewer handoffs and a consistent standard of care across every
-        part of your project.
-      </p>
-      <!-- TODO(content): Add the approved company story, team approach, and photos. -->
+      {site.experience.approved ? (
+        <p>{site.experience.statement}</p>
+      ) : (
+        <PendingNote title="Experience wording — pending confirmation" class="about__pending">
+          <p>Exact wording of APM’s years of repeat and referral business, to be approved.</p>
+        </PendingNote>
+      )}
+    </FeatureSplit>
+  </Section>
+
+  <Section tone="light" labelledBy="principles-heading">
+    <div class="section-heading">
+      <h2 id="principles-heading">What guides our work</h2>
     </div>
+    <ul class="principles">
+      {principles.map((item) => (
+        <li>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section labelledBy="intro-heading">
+    <FeatureSplit reverse>
+      <PhotoSlot
+        slot="media"
+        label="Alonza Maynard"
+        note="Approved portrait for the introduction."
+        ratio="1/1"
+      />
+      <p class="eyebrow">A note from APM</p>
+      <h2 id="intro-heading">Meet Alonza Maynard</h2>
+      <PendingNote title="Introduction — pending">
+        <p>
+          Space reserved for Alonza’s approved introduction: a short, first-person welcome about
+          APM’s approach and what clients can expect.
+        </p>
+      </PendingNote>
+    </FeatureSplit>
   </Section>
 
   <EstimateCta />
 </BaseLayout>
+
+<style>
+  :global(.about__pending) {
+    margin-top: var(--space-5);
+  }
+
+  .principles {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .principles li {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-control-border);
+  }
+
+  .principles p {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+</style>
