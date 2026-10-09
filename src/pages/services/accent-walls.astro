@@ -1,6 +1,9 @@
 ---
+import Button from '../../components/Button.astro';
 import EstimateCta from '../../components/EstimateCta.astro';
-import PageHeader from '../../components/PageHeader.astro';
+import FeatureSplit from '../../components/FeatureSplit.astro';
+import PendingNote from '../../components/PendingNote.astro';
+import PhotoSlot from '../../components/PhotoSlot.astro';
 import Section from '../../components/Section.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getService } from '../../config/services';
@@ -9,18 +12,60 @@ const service = getService('accent-walls');
 ---
 
 <BaseLayout title={service.title} description={service.summary}>
-  <PageHeader eyebrow="Design and installation" title={service.title} lead={service.summary} />
+  <section class="intro" aria-labelledby="accent-title">
+    <div class="container">
+      <FeatureSplit mediaWidth="large" reverse>
+        <PhotoSlot
+          slot="media"
+          label="Custom accent wall"
+          note="Finished feature wall, shown in its room."
+          ratio="4/3"
+          loading="eager"
+        />
+        <p class="eyebrow">Design detail</p>
+        <h1 id="accent-title">{service.title}</h1>
+        <p class="lead">{service.summary}</p>
+        <div class="actions intro__actions">
+          <Button href="/request-estimate/">Tell us about your project</Button>
+        </div>
+      </FeatureSplit>
+    </div>
+  </section>
 
-  <Section labelledBy="accent-approach-heading" width="narrow">
-    <div class="prose">
+  <Section tone="light" labelledBy="accent-approach-heading">
+    <FeatureSplit>
+      <PhotoSlot
+        slot="media"
+        label="Accent wall detail"
+        note="Close-up of texture or pattern."
+        ratio="1/1"
+      />
       <h2 id="accent-approach-heading">A focal point, designed for your space</h2>
       <p>
-        An accent wall can define a room, highlight architecture, or add warmth and texture. We work
-        with you on the look, then handle the installation and finishing.
+        An accent wall can define a room, highlight its architecture, or add warmth and texture. We
+        work with you on the look, then coordinate the work and finishing.
       </p>
-      <!-- TODO(content): Confirm accent wall styles and materials offered, and add approved project photos. -->
-    </div>
+      <PendingNote
+        title="Styles and materials — pending confirmation"
+        items={service.pendingDetails}
+        class="accent__pending"
+      />
+    </FeatureSplit>
   </Section>
 
   <EstimateCta heading="Considering an accent wall?" />
 </BaseLayout>
+
+<style>
+  .intro {
+    padding-block: var(--space-7) var(--section-space);
+  }
+
+  .intro__actions {
+    margin-top: var(--space-5);
+  }
+
+  :global(.accent__pending) {
+    margin-top: var(--space-5);
+  }
+</style>

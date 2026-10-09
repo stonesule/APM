@@ -2,7 +2,7 @@
 export interface Props {
   /** Heading id, used to label the section for assistive technology. */
   labelledBy?: string;
-  tone?: 'default' | 'alt' | 'dark';
+  tone?: 'default' | 'alt' | 'light' | 'green';
   width?: 'default' | 'narrow';
   class?: string;
 }
@@ -18,19 +18,33 @@ const { labelledBy, tone = 'default', width = 'default', class: className } = As
 
 <style>
   .section {
-    padding-block: var(--space-8);
+    padding-block: var(--section-space);
   }
 
   .section--alt {
     background: var(--color-surface-alt);
   }
 
-  .section--dark {
-    background: var(--color-primary);
-    color: var(--color-on-primary);
+  .section--light {
+    background: var(--color-surface);
   }
 
-  .section--dark :global(a:not(.button)) {
-    color: inherit;
+  /* Green sections set every text color explicitly; nothing is inherited
+     from the light-theme heading and paragraph styles. */
+  .section--green {
+    background: var(--color-green);
+    color: var(--color-on-green);
+  }
+
+  .section--green :global(:is(h1, h2, h3, h4, p, li, .eyebrow, .lead)) {
+    color: var(--color-on-green);
+  }
+
+  .section--green :global(a:not(.button)) {
+    color: var(--color-on-green);
+  }
+
+  .section--green :global(:focus-visible) {
+    outline-color: var(--color-focus-on-green);
   }
 </style>

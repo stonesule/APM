@@ -1,0 +1,56 @@
+---
+/**
+ * Marks details awaiting client confirmation in the design preview.
+ * Remove each usage once the detail is confirmed (see docs/pending-inputs.md).
+ */
+export interface Props {
+  /** Items awaiting confirmation. */
+  items?: readonly string[];
+  /** Heading shown above the items. */
+  title?: string;
+  class?: string;
+}
+
+const { items = [], title = 'Pending confirmation', class: className } = Astro.props;
+---
+
+<aside class:list={['pending', className]} aria-label={title}>
+  <p class="pending__title">{title}</p>
+  {items.length > 0 && (
+    <ul class="pending__list">
+      {items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  )}
+  <slot />
+</aside>
+
+<style>
+  .pending {
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-surface);
+    border: 1px dashed var(--color-control-border);
+    border-left: 3px solid var(--color-accent);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .pending__title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .pending__list {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .pending :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

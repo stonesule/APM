@@ -1,36 +1,168 @@
 ---
+import { Image } from 'astro:assets';
 import EstimateCta from '../components/EstimateCta.astro';
-import PageHeader from '../components/PageHeader.astro';
+import FeatureSplit from '../components/FeatureSplit.astro';
+import PendingNote from '../components/PendingNote.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../config/site';
+import brandPanel from '../assets/brand/apm-logo-cream.png';
+
+const principles = [
+  {
+    title: 'Creativity',
+    text: 'We bring ideas to the table, helping each space feel considered and personal.',
+  },
+  {
+    title: 'Craftsmanship',
+    text: 'Careful preparation and attention to detail are part of every project.',
+  },
+  {
+    title: 'Dependable service',
+    text: 'We communicate clearly and follow through on what we agree to do.',
+  },
+  {
+    title: 'Lasting relationships',
+    text: 'Much of our work comes from repeat clients and referrals, and we value that trust.',
+  },
+];
 ---
 
 <BaseLayout
   title="About"
   description={`About ${site.legalName}, an interior design and property enhancement company serving ${site.market}.`}
 >
-  <PageHeader
-    eyebrow={site.tagline}
-    title={`About ${site.shortName}`}
-    lead={site.experienceStatement}
-  />
-
-  <Section labelledBy="about-heading" width="narrow">
-    <div class="prose">
-      <h2 id="about-heading">One trusted company for your property</h2>
-      <p>
-        {site.legalName} brings together professional painting, custom accent walls, and related
-        property enhancement services. Our clients include homeowners, property owners, real estate
-        investors, and commercial clients who value quality workmanship and dependable service.
-      </p>
-      <p>
-        Working with one company means fewer handoffs and a consistent standard of care across every
-        part of your project.
-      </p>
-      <!-- TODO(content): Add the approved company story, team approach, and photos. -->
+  <header class="about-intro">
+    <div class="container">
+      <FeatureSplit reverse>
+        <figure slot="media" class="brand-panel">
+          <Image
+            src={brandPanel}
+            alt="APM Interior Design logo"
+            widths={[480, 720, 960, 1200]}
+            sizes="(min-width: 56rem) 34rem, calc(100vw - 2.5rem)"
+            format="webp"
+            quality={95}
+            loading="eager"
+            class="brand-panel__img"
+          />
+        </figure>
+        <p class="eyebrow">{site.tagline}</p>
+        <h1>Creativity and craftsmanship, from one trusted company.</h1>
+        <p class="lead">
+          APM brings professional painting, custom accent walls, and coordinated interior services
+          together, so every part of your project is held to the same standard.
+        </p>
+      </FeatureSplit>
     </div>
+  </header>
+
+  <Section labelledBy="story-heading">
+    <FeatureSplit>
+      <PhotoSlot
+        slot="media"
+        label="APM at work"
+        note="Approved APM photograph (team or work in progress)."
+        ratio="4/5"
+      />
+      <p class="eyebrow">Who we are</p>
+      <h2 id="story-heading">Built on relationships</h2>
+      <p>
+        Our business has grown through repeat clients and referrals. Homeowners, property owners,
+        real estate investors, and commercial clients return to us because they can count on
+        thoughtful design, quality workmanship, and dependable service.
+      </p>
+      {site.experience.approved ? (
+        <p>{site.experience.statement}</p>
+      ) : (
+        <PendingNote title="Experience wording — pending confirmation" class="about__pending">
+          <p>Exact wording of APM’s years of repeat and referral business, to be approved.</p>
+        </PendingNote>
+      )}
+    </FeatureSplit>
+  </Section>
+
+  <Section tone="light" labelledBy="principles-heading">
+    <div class="section-heading">
+      <h2 id="principles-heading">What guides our work</h2>
+    </div>
+    <ul class="principles">
+      {principles.map((item) => (
+        <li>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section labelledBy="intro-heading">
+    <FeatureSplit reverse>
+      <PhotoSlot
+        slot="media"
+        label="Alonza Maynard"
+        note="Approved portrait for the introduction."
+        ratio="1/1"
+      />
+      <p class="eyebrow">A note from APM</p>
+      <h2 id="intro-heading">Meet Alonza Maynard</h2>
+      <PendingNote title="Introduction — pending">
+        <p>
+          Space reserved for Alonza’s approved introduction: a short, first-person welcome about
+          APM’s approach and what clients can expect.
+        </p>
+      </PendingNote>
+    </FeatureSplit>
   </Section>
 
   <EstimateCta />
 </BaseLayout>
+
+<style>
+  .about-intro {
+    padding-block: var(--space-8) var(--space-7);
+    background: var(--color-surface-alt);
+  }
+
+  .about-intro .lead {
+    margin-bottom: 0;
+  }
+
+  /* Supplied cream-background logo, shown whole (its built-in margins are
+     part of the panel composition). No filters or recolouring. Served as
+     WebP q95: ~19 KB vs ~477 KB PNG at 1088px, mean colour difference
+     0.8/255 (the PNG's size comes from faint background grain). */
+  .brand-panel {
+    margin: 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .brand-panel__img {
+    width: 100%;
+    height: auto;
+  }
+
+  :global(.about__pending) {
+    margin-top: var(--space-5);
+  }
+
+  .principles {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .principles li {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-control-border);
+  }
+
+  .principles p {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+</style>

@@ -13,7 +13,7 @@ decision changes.
 | Packages   | npm with committed `package-lock.json`; CI uses `npm ci`                                                | Reproducible installs.                                                                 |
 | UI         | Astro components, semantic HTML, plain CSS with tokens in `src/styles/tokens.css`                       | No UI framework is needed for this content. No React.                                  |
 | JavaScript | One small inline script for the mobile menu; no other client JS                                         | Menu works without JS (nav is shown, toggle hidden), enhanced when JS is available.    |
-| Fonts      | System font stacks                                                                                      | No third-party font requests or licensing questions. Revisit if branding requires one. |
+| Fonts      | System stacks: Georgia-style serif headings, system sans body                                           | No third-party font requests or licensing questions. Revisit if branding requires one. |
 | Content    | Typed TS config in `src/config/`; empty `projects` and `testimonials` collections                       | Business details editable in one place; no fabricated portfolio or reviews.            |
 | URLs       | `trailingSlash: 'always'`, `build.format: 'directory'`                                                  | Every route is `/path/` → `dist/path/index.html`, which all static hosts serve.        |
 | Indexing   | `noindex` unless `PUBLIC_ALLOW_INDEXING=true`                                                           | Preview and pre-launch builds stay out of search results.                              |

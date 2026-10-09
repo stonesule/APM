@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 import EstimateCta from '../components/EstimateCta.astro';
 import PageHeader from '../components/PageHeader.astro';
+import PendingNote from '../components/PendingNote.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getService } from '../config/services';
@@ -10,6 +11,11 @@ import { getService } from '../config/services';
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
   (a, b) => (b.data.completed?.getTime() ?? 0) - (a.data.completed?.getTime() ?? 0),
 );
+
+// Layout placeholders shown until approved projects are added to
+// src/content/projects/. They describe what goes in each slot and are not
+// presented as completed work.
+const placeholderSlots = ['Project slot 1', 'Project slot 2', 'Project slot 3'];
 ---
 
 <BaseLayout
@@ -18,20 +24,27 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 >
   <PageHeader
     eyebrow="Our work"
-    title="Projects"
-    lead="A look at completed painting, accent wall, and property enhancement work."
+    title="A closer look at the details."
+    lead="A gallery of completed painting, accent wall, and property enhancement work."
   />
 
   <Section labelledBy="projects-heading">
     <h2 id="projects-heading" class="visually-hidden">
-      Completed projects
+      Projects
     </h2>
     {projects.length > 0 ? (
-      <ul class="grid project-list">
+      <ul class="gallery">
         {projects.map((project) => (
           <li class="project">
-            {project.data.coverImage && (
-              <Image src={project.data.coverImage} alt={project.data.coverAlt ?? ''} />
+            {project.data.coverImage ? (
+              <PhotoSlot
+                label={project.data.title}
+                image={project.data.coverImage}
+                alt={project.data.coverAlt ?? ''}
+                ratio="4/3"
+              />
+            ) : (
+              <PhotoSlot label={project.data.title} ratio="4/3" />
             )}
             <div class="project__body">
               <h3>{project.data.title}</h3>
@@ -45,7 +58,26 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
         ))}
       </ul>
     ) : (
-      <p class="lead">Our project gallery is being prepared. Please check back soon.</p>
+      <>
+        <PendingNote title="Gallery layout preview" class="gallery__note">
+          <p>
+            These slots show where approved project photos, titles, and captions will appear. They
+            are layout placeholders, not examples of completed APM projects.
+          </p>
+        </PendingNote>
+        <ul class="gallery">
+          {placeholderSlots.map((slot) => (
+            <li class="project project--placeholder">
+              <PhotoSlot label={slot} note="Approved project photo." ratio="4/3" />
+              <div class="project__body">
+                <p class="project__title-placeholder">Approved project title</p>
+                <p>Approved caption describing the space and the work.</p>
+                <p class="project__meta">Services · general area (city only)</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
     )}
   </Section>
 
@@ -53,26 +85,50 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 </BaseLayout>
 
 <style>
-  .project-list {
+  .gallery {
+    display: grid;
+    gap: var(--space-6) var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
+  :global(.gallery__note) {
+    margin-bottom: var(--space-6);
+    max-width: 40rem;
+  }
+
   .project {
-    overflow: hidden;
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
   }
 
   .project__body {
     padding: var(--space-5);
   }
 
+  .project__body h3 {
+    font-size: var(--text-xl);
+  }
+
+  .project__body p {
+    color: var(--color-text-secondary);
+  }
+
+  .project__title-placeholder {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    color: var(--color-text) !important;
+    margin-bottom: var(--space-3);
+  }
+
+  .project--placeholder .project__body {
+    border: 1px dashed var(--color-control-border);
+    border-top: 0;
+  }
+
   .project__meta {
     margin: 0;
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
   }
 </style>

@@ -1,0 +1,54 @@
+---
+/**
+ * Two-column layout: a photo slot beside content. Stacks on small screens.
+ * Put the PhotoSlot in the "media" slot and the copy in the default slot.
+ */
+export interface Props {
+  /** Put the media on the right on wide screens. */
+  reverse?: boolean;
+  /** Media column share on wide screens. */
+  mediaWidth?: 'half' | 'large';
+}
+
+const { reverse = false, mediaWidth = 'half' } = Astro.props;
+---
+
+<div class:list={['split', { 'split--reverse': reverse, 'split--large': mediaWidth === 'large' }]}>
+  <div class="split__media">
+    <slot name="media" />
+  </div>
+  <div class="split__content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .split {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .split--large {
+      grid-template-columns: 1.3fr 1fr;
+    }
+
+    .split--reverse .split__media {
+      order: 2;
+    }
+
+    .split--reverse.split--large {
+      grid-template-columns: 1fr 1.3fr;
+    }
+  }
+
+  .split__content > :global(:last-child) {
+    margin-bottom: 0;
+  }
+</style>

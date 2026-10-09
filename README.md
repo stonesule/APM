@@ -72,11 +72,25 @@ Routes: `/`, `/services/`, `/services/painting/`, `/services/accent-walls/`,
 - **Business details** (phone, email, service areas, review links): edit
   `src/config/site.ts`. A value left as `null` or `[]` is simply not shown, so
   never add a placeholder like "555-0100".
+- **Logo**: the logos supplied by Sule are in `src/assets/brand/` (unmodified
+  originals). `src/components/Wordmark.astro` renders the primary logo in the
+  header and footer through a crop window that trims the file's built-in
+  whitespace; if the file changes, re-measure the artwork bounds noted there.
+  The cream version is the About page brand panel.
+- **Design preview notice**: `site.designPreview` in `src/config/site.ts`
+  shows the site-wide "Design preview" banner. Turn it off only at launch.
+- **Photos**: every photo area is a `PhotoSlot` component showing a labelled
+  placeholder. To use an approved photo, add it under `src/assets/photos/`,
+  import it in the page, and pass `image={photo}` with descriptive `alt` text.
+  Astro optimizes it at build time.
+- **Pending details**: unconfirmed service scope and copy are shown with
+  `PendingNote` (or a service's `pendingDetails` list). Remove them as details
+  are confirmed. They are intended for the review preview, not launch.
 - **Services**: edit `src/config/services.ts`. Cards on the homepage and
   `/services/` update automatically. Detail-page copy is in
   `src/pages/services/`.
 - **Navigation**: edit `src/config/navigation.ts`.
-- **Colors and typography**: edit `src/styles/tokens.css`, then re-check text
+- **Colors and typography** (provisional AMP-5 palette): edit `src/styles/tokens.css`, then re-check text
   contrast (WCAG AA: 4.5:1 for body text).
 - **Projects**: add `src/content/projects/<slug>.md`:
 

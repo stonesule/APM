@@ -1,7 +1,12 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Variant = 'primary' | 'secondary';
+/**
+ * primary   — deep green with cream text (main calls to action)
+ * secondary — transparent with a subtle border
+ * on-green  — cream with green text, for use inside green sections
+ */
+type Variant = 'primary' | 'secondary' | 'on-green';
 
 export interface Props extends Omit<HTMLAttributes<'a'>, 'class'> {
   href: string;
@@ -21,36 +26,54 @@ const { href, variant = 'primary', class: className, ...rest } = Astro.props;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 2.75rem;
+    min-height: 3rem;
     padding: var(--space-3) var(--space-5);
-    border: 2px solid var(--color-primary);
-    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
     font-weight: 600;
+    letter-spacing: 0.02em;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
     transition:
       background-color 0.15s ease,
-      color 0.15s ease;
+      border-color 0.15s ease;
   }
 
   .button--primary {
-    background: var(--color-primary);
-    color: var(--color-on-primary);
+    background: var(--color-green);
+    border-color: var(--color-green);
+    color: var(--color-on-green);
   }
 
   .button--primary:hover {
-    background: var(--color-primary-hover);
-    border-color: var(--color-primary-hover);
+    background: var(--color-green-hover);
+    border-color: var(--color-green-hover);
   }
 
   .button--secondary {
     background: transparent;
-    color: var(--color-primary);
+    border-color: var(--color-control-border);
+    color: var(--color-text);
   }
 
   .button--secondary:hover {
     background: var(--color-surface-alt);
+  }
+
+  .button--on-green {
+    background: var(--color-on-green);
+    border-color: var(--color-on-green);
+    color: var(--color-green);
+  }
+
+  .button--on-green:hover {
+    background: var(--color-surface-alt);
+  }
+
+  .button--on-green:focus-visible {
+    outline-color: var(--color-focus-on-green);
   }
 
   @media (prefers-reduced-motion: reduce) {
