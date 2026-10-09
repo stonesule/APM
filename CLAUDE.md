@@ -48,6 +48,11 @@ Hosting checks (no publishing): `npm run deploy:check`, then
 - Placeholders must look like placeholders: use `PhotoSlot` for photos and
   `PendingNote` / `pendingDetails` for unconfirmed details. Never present a
   placeholder as completed APM work.
+- Logos (`src/assets/brand/`) are supplied artwork: keep the files unmodified;
+  never redraw, stretch, recolour, or apply CSS filters. Scale uniformly, use
+  Astro's `<Image>` with explicit widths/sizes, and keep the cream backing
+  behind the logo on dark backgrounds. Linked logos are named
+  "APM Interior Design, LLC home".
 - Text on green (`--color-green*`) sets its color explicitly to
   `--color-on-green`; never rely on inherited heading colors.
 

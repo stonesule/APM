@@ -107,23 +107,53 @@ const { phone, email } = site.contact;
           <li>Your preferred timing</li>
           <li>Photos of the space, if you have them</li>
         </ul>
-        {(phone || email) && (
-          <>
-            <h2 class="estimate__heading">Contact us</h2>
-            <ul>
-              {phone && (
-                <li>
-                  Phone: <a href={phoneHref(phone)}>{phone}</a>
-                </li>
+        <h2 class="estimate__heading" id="contact-details-heading">
+          Contact details
+        </h2>
+        <dl class="details" aria-labelledby="contact-details-heading">
+          <div class="details__row">
+            <dt>Phone</dt>
+            <dd>
+              {phone ? (
+                <a href={phoneHref(phone)}>{phone}</a>
+              ) : (
+                <span class="details__pending">Pending — not yet published</span>
               )}
-              {email && (
-                <li>
-                  Email: <a href={`mailto:${email}`}>{email}</a>
-                </li>
+            </dd>
+          </div>
+          <div class="details__row">
+            <dt>Email</dt>
+            <dd>
+              {email ? (
+                <a href={`mailto:${email}`}>{email}</a>
+              ) : (
+                <span class="details__pending">Pending — not yet published</span>
               )}
-            </ul>
-          </>
-        )}
+            </dd>
+          </div>
+        </dl>
+
+        <h2 class="estimate__heading" id="coverage-heading">
+          Service coverage
+        </h2>
+        <dl class="details" aria-labelledby="coverage-heading">
+          <div class="details__row">
+            <dt>Market</dt>
+            <dd>{site.market.replace(/^the /, 'The ')}</dd>
+          </div>
+          <div class="details__row">
+            <dt>Service area</dt>
+            <dd>
+              {site.serviceAreas.length > 0 ? (
+                site.serviceAreas.join(', ')
+              ) : (
+                <span class="details__pending">
+                  Pending — exact cities and boundaries to be confirmed
+                </span>
+              )}
+            </dd>
+          </div>
+        </dl>
       </aside>
     </div>
   </Section>
@@ -258,8 +288,37 @@ const { phone, email } = site.contact;
   }
 
   .estimate__aside ul {
+    margin-bottom: var(--space-7);
     padding-left: 1.1rem;
     color: var(--color-text-secondary);
+  }
+
+  .details {
+    margin: 0 0 var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .details__row {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+  }
+
+  .details dt {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .details dd {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  .details__pending {
+    font-style: italic;
   }
 
   .estimate__aside li + li {

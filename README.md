@@ -72,8 +72,13 @@ Routes: `/`, `/services/`, `/services/painting/`, `/services/accent-walls/`,
 - **Business details** (phone, email, service areas, review links): edit
   `src/config/site.ts`. A value left as `null` or `[]` is simply not shown, so
   never add a placeholder like "555-0100".
-- **Logo**: the provisional wordmark lives in `src/components/Wordmark.astro`.
-  Replace its contents with the approved logo; the header and footer update.
+- **Logo**: the logos supplied by Sule are in `src/assets/brand/` (unmodified
+  originals). `src/components/Wordmark.astro` renders the primary logo in the
+  header and footer through a crop window that trims the file's built-in
+  whitespace; if the file changes, re-measure the artwork bounds noted there.
+  The cream version is the About page brand panel.
+- **Design preview notice**: `site.designPreview` in `src/config/site.ts`
+  shows the site-wide "Design preview" banner. Turn it off only at launch.
 - **Photos**: every photo area is a `PhotoSlot` component showing a labelled
   placeholder. To use an approved photo, add it under `src/assets/photos/`,
   import it in the page, and pass `image={photo}` with descriptive `alt` text.

@@ -1,46 +1,87 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/apm-logo-primary.png';
+
 /**
- * Provisional text wordmark. Replace the contents of this component with the
- * approved APM logo (e.g. an inline SVG or <Image>) when it is supplied; the
- * header and footer pick it up automatically.
+ * APM primary logo (supplied by Sule, AMP-5). Used in the header and footer.
+ *
+ * The source PNG (1774×887, transparent) has generous built-in whitespace
+ * around the artwork. Instead of editing the file, a fixed-aspect window
+ * shows the artwork plus a small margin: source box x 160–1625, y 89–831
+ * (1466×743). The image is scaled uniformly inside that window — never
+ * stretched, recoloured, or filtered. If the logo file changes, re-measure
+ * the artwork bounds and update the crop values (left, top, width,
+ * aspect-ratio) in the styles below.
+ *
+ * The rendered image is 121.01% of the window width (9.5rem → 184px on
+ * mobile, 11rem → 213px from 48rem; the footer's 10rem → 194px falls in
+ * between), which is what `sizes` describes; `widths` covers 1x–3x screens.
+ *
+ * The parent link carries the accessible name ("APM Interior Design, LLC
+ * home"), so the image itself is decorative here (alt="").
  */
 export interface Props {
-  tone?: 'default' | 'on-green';
+  /** header: on the light header. footer: on a cream backing for the dark footer. */
+  placement?: 'header' | 'footer';
 }
 
-const { tone = 'default' } = Astro.props;
+const { placement = 'header' } = Astro.props;
 ---
 
-<span class:list={['wordmark', `wordmark--${tone}`]}>
-  <span class="wordmark__name">APM</span>
-  <span class="wordmark__descriptor">Interior Design</span>
+<span class:list={['logo', `logo--${placement}`]}>
+  <span class="logo__window">
+    <Image
+      src={logo}
+      alt=""
+      widths={[184, 213, 368, 426, 552, 639]}
+      sizes="(max-width: 47.99rem) 184px, 213px"
+      format="png"
+      loading={placement === 'header' ? 'eager' : 'lazy'}
+      fetchpriority={placement === 'header' ? 'high' : 'auto'}
+      class="logo__img"
+    />
+  </span>
 </span>
 
 <style>
-  .wordmark {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1;
-    color: var(--color-text);
+  .logo {
+    display: inline-block;
+    line-height: 0;
   }
 
-  .wordmark--on-green {
-    color: var(--color-on-green);
+  .logo__window {
+    position: relative;
+    display: block;
+    width: var(--logo-width);
+    aspect-ratio: 1466 / 743;
+    overflow: hidden;
   }
 
-  .wordmark__name {
-    font-family: var(--font-heading);
-    font-size: 1.75rem;
-    letter-spacing: 0.12em;
+  .logo__img {
+    position: absolute;
+    left: -10.914%;
+    top: -11.978%;
+    width: 121.01%;
+    max-width: none;
+    height: auto;
   }
 
-  .wordmark__descriptor {
-    margin-top: 0.3rem;
-    font-family: var(--font-body);
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
+  .logo--header {
+    --logo-width: 9.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    .logo--header {
+      --logo-width: 11rem;
+    }
+  }
+
+  /* Restrained cream backing so the black lettering stays visible on the
+     dark footer. The artwork itself is unchanged. */
+  .logo--footer {
+    --logo-width: 10rem;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-on-green);
+    border-radius: var(--radius);
   }
 </style>

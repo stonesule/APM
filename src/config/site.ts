@@ -37,6 +37,11 @@ export interface SiteSettings {
   reviewLinks: readonly { label: string; href: string }[];
   /** Approved social profile links. Pending. */
   socialLinks: readonly { label: string; href: string }[];
+  /**
+   * Shows the site-wide "Design preview" notice. Set to false only when
+   * assets and copy are approved for launch.
+   */
+  designPreview: boolean;
 }
 
 export const site: SiteSettings = {
@@ -59,6 +64,7 @@ export const site: SiteSettings = {
   serviceAreas: [],
   reviewLinks: [],
   socialLinks: [],
+  designPreview: true,
 };
 
 /** Convert a display phone number into a `tel:` href. */
