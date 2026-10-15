@@ -43,7 +43,23 @@ Hosting checks (no publishing): `npm run deploy:check`, then
   founding year. The "25+ years of repeat clients" line is client-reported.
 - Unknown phone, email, service area, review links, and photos stay `null`/empty
   and are not rendered. Never add dummy contact details or `#` links.
-- Never render a form that reports success without confirmed delivery.
+- Never render a form that reports success without confirmed delivery. The
+  estimate page is a disabled layout with no `<form>` until the form ticket.
+- Photos: describe only what is visible (no invented names, locations,
+  dates, materials, before/after claims, or results); group photos only when
+  they clearly show the same space; tag `services` only when the work is
+  evident. Strip GPS/EXIF before committing (the repo is public). Service pages
+  use only photos from projects tagged with that service.
+- Placeholders must look like placeholders: use `PhotoSlot` for photos and
+  `PendingNote` / `pendingDetails` for unconfirmed details. Never present a
+  placeholder as completed APM work.
+- Logos (`src/assets/brand/`) are supplied artwork: keep the files unmodified;
+  never redraw, stretch, recolour, or apply CSS filters. Scale uniformly, use
+  Astro's `<Image>` with explicit widths/sizes, and keep the cream backing
+  behind the logo on dark backgrounds. Linked logos are named
+  "APM Interior Design, LLC home".
+- Text on green (`--color-green*`) sets its color explicitly to
+  `--color-on-green`; never rely on inherited heading colors.
 
 ## Deployment rules
 

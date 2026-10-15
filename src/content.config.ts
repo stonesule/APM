@@ -5,28 +5,40 @@ import { serviceSlugs } from './config/services';
 
 /**
  * Completed projects. Add one Markdown file per project in
- * src/content/projects/. Only publish work the client has approved, with
- * photos APM has the right to use. The collection starts empty on purpose.
+ * src/content/projects/, with photos stored in src/assets/photos/.
+ *
+ * Only publish work the client has approved, with photos APM has the right to
+ * use. Describe what is visible; never invent names, locations, dates,
+ * materials, scope, or results. Group photos in one entry only when they
+ * clearly show the same space. Leave `services` empty when the work APM did
+ * is not evident from the photos.
  */
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: ({ image }) =>
-    z
-      .object({
-        title: z.string(),
-        summary: z.string(),
-        services: z.array(z.enum(serviceSlugs)).min(1),
-        /** General area only (e.g. a city), never a street address. */
-        area: z.string().optional(),
-        completed: z.coerce.date().optional(),
-        coverImage: image().optional(),
-        coverAlt: z.string().optional(),
-        draft: z.boolean().default(false),
-      })
-      .refine((data) => !data.coverImage || data.coverAlt, {
-        message: 'coverAlt is required when coverImage is set',
-        path: ['coverAlt'],
-      }),
+    z.object({
+      /** Neutral, descriptive title (no invented project or client names). */
+      title: z.string(),
+      summary: z.string(),
+      services: z.array(z.enum(serviceSlugs)).default([]),
+      /** Gallery order, lowest first. */
+      order: z.number().int(),
+      /** First photo is the lead image. */
+      photos: z
+        .array(
+          z.object({
+            src: image(),
+            /** Describe what is visible in the photo. */
+            alt: z.string().min(20),
+            caption: z.string().optional(),
+          }),
+        )
+        .min(1),
+      /** General area only (e.g. a city), never a street address. */
+      area: z.string().optional(),
+      completed: z.coerce.date().optional(),
+      draft: z.boolean().default(false),
+    }),
 });
 
 /**

@@ -1,78 +1,151 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 import EstimateCta from '../components/EstimateCta.astro';
 import PageHeader from '../components/PageHeader.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getService } from '../config/services';
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
-  (a, b) => (b.data.completed?.getTime() ?? 0) - (a.data.completed?.getTime() ?? 0),
+  (a, b) => a.data.order - b.data.order,
 );
+const photoCount = projects.reduce((n, project) => n + project.data.photos.length, 0);
 ---
 
 <BaseLayout
   title="Projects"
-  description="Completed painting, accent wall, and property enhancement work by APM."
+  description="Painting, accent wall, and finished interior work by APM Interior Design."
 >
   <PageHeader
     eyebrow="Our work"
-    title="Projects"
-    lead="A look at completed painting, accent wall, and property enhancement work."
+    title="A closer look at the details."
+    lead="Painting, accent walls, and finished spaces from our past work."
   />
 
   <Section labelledBy="projects-heading">
     <h2 id="projects-heading" class="visually-hidden">
-      Completed projects
+      Project gallery
     </h2>
-    {projects.length > 0 ? (
-      <ul class="grid project-list">
-        {projects.map((project) => (
-          <li class="project">
-            {project.data.coverImage && (
-              <Image src={project.data.coverImage} alt={project.data.coverAlt ?? ''} />
-            )}
-            <div class="project__body">
-              <h3>{project.data.title}</h3>
-              <p>{project.data.summary}</p>
-              <p class="project__meta">
-                {project.data.services.map((slug) => getService(slug).title).join(' · ')}
-                {project.data.area && ` — ${project.data.area}`}
-              </p>
-            </div>
+    <ul class="gallery" aria-label={`${projects.length} projects, ${photoCount} photos`}>
+      {projects.map((project, index) => {
+        const { title, summary, services, photos } = project.data;
+        const grouped = photos.length > 1;
+        return (
+          <li class:list={['project', { 'project--group': grouped }]}>
+            <article aria-labelledby={`project-${project.id}`}>
+              <div class:list={['project__photos', `project__photos--${photos.length}`]}>
+                {photos.map((photo) => (
+                  <figure class="project__figure">
+                    <PhotoSlot
+                      label={title}
+                      image={photo.src}
+                      alt={photo.alt}
+                      ratio="4/5"
+                      sizes="(min-width: 64rem) 22rem, (min-width: 40rem) 45vw, 100vw"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                    {grouped && photo.caption && (
+                      <figcaption class="project__caption">{photo.caption}</figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+              <div class="project__body">
+                <h3 id={`project-${project.id}`}>{title}</h3>
+                <p>{summary}</p>
+                {services.length > 0 && (
+                  <p class="project__meta">
+                    {services.map((slug) => getService(slug).title).join(' · ')}
+                  </p>
+                )}
+              </div>
+            </article>
           </li>
-        ))}
-      </ul>
-    ) : (
-      <p class="lead">Our project gallery is being prepared. Please check back soon.</p>
-    )}
+        );
+      })}
+    </ul>
   </Section>
 
   <EstimateCta />
 </BaseLayout>
 
 <style>
-  .project-list {
+  .gallery {
+    display: grid;
+    gap: var(--space-6) var(--space-5);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    grid-auto-flow: dense;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .project {
-    overflow: hidden;
+    min-width: 0;
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+  }
+
+  /* Grouped views of the same space span two columns where there is room. */
+  @media (min-width: 40rem) {
+    .project--group {
+      grid-column: span 2;
+    }
+  }
+
+  /* Three views of one space get the full row on wide screens. */
+  @media (min-width: 64rem) {
+    .project--group:has(.project__photos--3) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .project__photos {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 40rem) {
+    .project__photos--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .project__photos--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .project__figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .project__caption {
+    padding: var(--space-2) var(--space-3) 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
   }
 
   .project__body {
     padding: var(--space-5);
   }
 
+  .project__body h3 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .project__body p {
+    color: var(--color-text-secondary);
+  }
+
+  .project__body p:last-child {
+    margin-bottom: 0;
+  }
+
   .project__meta {
-    margin: 0;
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    font-weight: 600;
+    color: var(--color-accent) !important;
   }
 </style>

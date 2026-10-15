@@ -1,26 +1,93 @@
 ---
+import Button from '../../components/Button.astro';
 import EstimateCta from '../../components/EstimateCta.astro';
-import PageHeader from '../../components/PageHeader.astro';
+import FeatureSplit from '../../components/FeatureSplit.astro';
+import PendingNote from '../../components/PendingNote.astro';
+import PhotoSlot from '../../components/PhotoSlot.astro';
 import Section from '../../components/Section.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getService } from '../../config/services';
+import { getPhoto } from '../../lib/photos';
 
 const service = getService('accent-walls');
+const finished = await getPhoto('slat-accent-wall', 0);
+const prep = await getPhoto('slat-accent-wall', 1);
 ---
 
 <BaseLayout title={service.title} description={service.summary}>
-  <PageHeader eyebrow="Design and installation" title={service.title} lead={service.summary} />
+  <section class="intro" aria-labelledby="accent-title">
+    <div class="container">
+      <FeatureSplit mediaWidth="large" reverse>
+        <PhotoSlot
+          slot="media"
+          label="Custom accent wall"
+          image={finished.src}
+          alt={finished.alt}
+          ratio="1/1"
+          position="50% 40%"
+          sizes="(min-width: 76rem) 40rem, (min-width: 56rem) 55vw, calc(100vw - 2.5rem)"
+          loading="eager"
+        />
+        <p class="eyebrow">Design detail</p>
+        <h1 id="accent-title">{service.title}</h1>
+        <p class="lead">{service.summary}</p>
+        <div class="actions intro__actions">
+          <Button href="/request-estimate/">Tell us about your project</Button>
+        </div>
+      </FeatureSplit>
+    </div>
+  </section>
 
-  <Section labelledBy="accent-approach-heading" width="narrow">
-    <div class="prose">
+  <Section tone="light" labelledBy="accent-approach-heading">
+    <FeatureSplit>
+      <figure slot="media" class="photo-figure">
+        <PhotoSlot
+          label="Room during preparation"
+          image={prep.src}
+          alt={prep.alt}
+          ratio="1/1"
+          position="50% 45%"
+          sizes="(min-width: 76rem) 34rem, (min-width: 56rem) 45vw, calc(100vw - 2.5rem)"
+        />
+        <figcaption>The same room during preparation, before the slat wall shown above.</figcaption>
+      </figure>
       <h2 id="accent-approach-heading">A focal point, designed for your space</h2>
       <p>
-        An accent wall can define a room, highlight architecture, or add warmth and texture. We work
-        with you on the look, then handle the installation and finishing.
+        An accent wall can define a room, highlight its architecture, or add warmth and texture. We
+        work with you on the look, then coordinate the work and finishing.
       </p>
-      <!-- TODO(content): Confirm accent wall styles and materials offered, and add approved project photos. -->
-    </div>
+      <PendingNote
+        title="Styles and materials — pending confirmation"
+        items={service.pendingDetails}
+        class="accent__pending"
+      />
+    </FeatureSplit>
   </Section>
 
   <EstimateCta heading="Considering an accent wall?" />
 </BaseLayout>
+
+<style>
+  .photo-figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .photo-figure figcaption {
+    padding-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .intro {
+    padding-block: var(--space-7) var(--section-space);
+  }
+
+  .intro__actions {
+    margin-top: var(--space-5);
+  }
+
+  :global(.accent__pending) {
+    margin-top: var(--space-5);
+  }
+</style>

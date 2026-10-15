@@ -18,10 +18,13 @@ export interface SiteSettings {
   /** Market description. Exact service boundaries are pending. */
   market: string;
   /**
-   * Client-reported relationship history. Do not convert this into a
-   * founding year or company age.
+   * Client-reported relationship history. Rendered only when `approved` is
+   * true. Do not convert it into a founding year or company age.
    */
-  experienceStatement: string;
+  experience: {
+    statement: string;
+    approved: boolean;
+  };
   contact: {
     /** Display format, e.g. "(404) 555-…". Pending. */
     phone: string | null;
@@ -34,6 +37,11 @@ export interface SiteSettings {
   reviewLinks: readonly { label: string; href: string }[];
   /** Approved social profile links. Pending. */
   socialLinks: readonly { label: string; href: string }[];
+  /**
+   * Shows the site-wide "Design preview" notice. Set to false only when
+   * assets and copy are approved for launch.
+   */
+  designPreview: boolean;
 }
 
 export const site: SiteSettings = {
@@ -43,8 +51,12 @@ export const site: SiteSettings = {
   description:
     'APM Interior Design provides professional painting, custom accent walls, and coordinated property enhancement services in the Atlanta metropolitan area.',
   market: 'the Atlanta metropolitan area',
-  experienceStatement:
-    'Our work is built on more than 25 years of repeat clients and word-of-mouth referrals.',
+  experience: {
+    // Exact "25+ years" wording is pending client confirmation.
+    statement:
+      'Our work is built on more than 25 years of repeat clients and word-of-mouth referrals.',
+    approved: false,
+  },
   contact: {
     phone: null,
     email: null,
@@ -52,6 +64,7 @@ export const site: SiteSettings = {
   serviceAreas: [],
   reviewLinks: [],
   socialLinks: [],
+  designPreview: true,
 };
 
 /** Convert a display phone number into a `tel:` href. */
