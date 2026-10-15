@@ -7,7 +7,10 @@ import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../config/site';
+import { getPhoto } from '../lib/photos';
 import brandPanel from '../assets/brand/apm-logo-cream.png';
+
+const workPhoto = await getPhoto('apartment-black-walls', 1);
 
 const principles = [
   {
@@ -63,8 +66,11 @@ const principles = [
       <PhotoSlot
         slot="media"
         label="APM at work"
-        note="Approved APM photograph (team or work in progress)."
+        image={workPhoto.src}
+        alt={workPhoto.alt}
         ratio="4/5"
+        position="50% 60%"
+        sizes="(min-width: 76rem) 34rem, (min-width: 56rem) 45vw, calc(100vw - 2.5rem)"
       />
       <p class="eyebrow">Who we are</p>
       <h2 id="story-heading">Built on relationships</h2>

@@ -7,8 +7,11 @@ import PhotoSlot from '../../components/PhotoSlot.astro';
 import Section from '../../components/Section.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getService } from '../../config/services';
+import { getPhoto } from '../../lib/photos';
 
 const service = getService('accent-walls');
+const finished = await getPhoto('slat-accent-wall', 0);
+const prep = await getPhoto('slat-accent-wall', 1);
 ---
 
 <BaseLayout title={service.title} description={service.summary}>
@@ -18,8 +21,11 @@ const service = getService('accent-walls');
         <PhotoSlot
           slot="media"
           label="Custom accent wall"
-          note="Finished feature wall, shown in its room."
-          ratio="4/3"
+          image={finished.src}
+          alt={finished.alt}
+          ratio="1/1"
+          position="50% 40%"
+          sizes="(min-width: 76rem) 40rem, (min-width: 56rem) 55vw, calc(100vw - 2.5rem)"
           loading="eager"
         />
         <p class="eyebrow">Design detail</p>
@@ -34,12 +40,17 @@ const service = getService('accent-walls');
 
   <Section tone="light" labelledBy="accent-approach-heading">
     <FeatureSplit>
-      <PhotoSlot
-        slot="media"
-        label="Accent wall detail"
-        note="Close-up of texture or pattern."
-        ratio="1/1"
-      />
+      <figure slot="media" class="photo-figure">
+        <PhotoSlot
+          label="Room during preparation"
+          image={prep.src}
+          alt={prep.alt}
+          ratio="1/1"
+          position="50% 45%"
+          sizes="(min-width: 76rem) 34rem, (min-width: 56rem) 45vw, calc(100vw - 2.5rem)"
+        />
+        <figcaption>The same room during preparation, before the slat wall shown above.</figcaption>
+      </figure>
       <h2 id="accent-approach-heading">A focal point, designed for your space</h2>
       <p>
         An accent wall can define a room, highlight its architecture, or add warmth and texture. We
@@ -57,6 +68,17 @@ const service = getService('accent-walls');
 </BaseLayout>
 
 <style>
+  .photo-figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .photo-figure figcaption {
+    padding-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
   .intro {
     padding-block: var(--space-7) var(--section-space);
   }

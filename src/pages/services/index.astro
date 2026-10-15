@@ -10,6 +10,10 @@ import ServiceCard from '../../components/ServiceCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getService, servicesByTier } from '../../config/services';
 import { site } from '../../config/site';
+import { getPhoto } from '../../lib/photos';
+
+const paintingPhoto = await getPhoto('hallway-refresh', 0);
+const accentPhoto = await getPhoto('slat-accent-wall', 0);
 
 const painting = getService('painting');
 const accentWalls = getService('accent-walls');
@@ -31,8 +35,11 @@ const supporting = servicesByTier('supporting');
       <PhotoSlot
         slot="media"
         label="Professional painting"
-        note="Wide photo of a finished painted interior."
-        ratio="4/3"
+        image={paintingPhoto.src}
+        alt={paintingPhoto.alt}
+        ratio="1/1"
+        position="50% 55%"
+        sizes="(min-width: 76rem) 40rem, (min-width: 56rem) 55vw, calc(100vw - 2.5rem)"
       />
       <p class="eyebrow">Our core specialty</p>
       <h2 id="painting-heading">{painting.title}</h2>
@@ -53,8 +60,11 @@ const supporting = servicesByTier('supporting');
       <PhotoSlot
         slot="media"
         label="Custom accent wall"
-        note="Finished feature wall in a styled room."
+        image={accentPhoto.src}
+        alt={accentPhoto.alt}
         ratio="4/5"
+        position="50% 40%"
+        sizes="(min-width: 76rem) 34rem, (min-width: 56rem) 45vw, calc(100vw - 2.5rem)"
       />
       <p class="eyebrow">Design detail</p>
       <h2 id="accent-heading">{accentWalls.title}</h2>

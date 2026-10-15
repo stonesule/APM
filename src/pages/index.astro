@@ -7,6 +7,7 @@ import ProcessSteps from '../components/ProcessSteps.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getService, servicesByTier } from '../config/services';
+import { getPhoto } from '../lib/photos';
 
 const painting = getService('painting');
 const accentWalls = getService('accent-walls');
@@ -20,10 +21,19 @@ const values = [
   'One trusted company',
 ];
 
-const detailSlots = [
-  { label: 'Painting detail', note: 'Close-up of a finished painted surface or trim.' },
-  { label: 'Accent wall detail', note: 'Texture or pattern from a finished accent wall.' },
-  { label: 'Finished room', note: 'A completed space showing the overall result.' },
+const heroPhoto = await getPhoto('lounge-board-and-batten', 0);
+const paintingPhoto = await getPhoto('apartment-black-walls');
+const accentPhoto = await getPhoto('slat-accent-wall');
+
+// Three complementary details: panelling, stair railing, and a finished room.
+const detailPhotos = [
+  {
+    label: 'Board-and-batten panelling',
+    ...(await getPhoto('lounge-board-and-batten', 1)),
+    position: '60% 50%',
+  },
+  { label: 'Stairwell', ...(await getPhoto('stairwell-chandelier')), position: '50% 60%' },
+  { label: 'Powder room', ...(await getPhoto('powder-room-blue-green')), position: '50% 50%' },
 ];
 ---
 
@@ -47,8 +57,11 @@ const detailSlots = [
       <PhotoSlot
         class="hero__photo"
         label="Finished interior"
-        note="Large hero photo of a completed, well-lit room."
+        image={heroPhoto.src}
+        alt={heroPhoto.alt}
         ratio="4/5"
+        position="50% 45%"
+        sizes="(min-width: 76rem) 34rem, (min-width: 56rem) 45vw, calc(100vw - 2.5rem)"
         loading="eager"
       />
     </div>
@@ -74,7 +87,14 @@ const detailSlots = [
 
     <div class="services">
       <article class="service service--core">
-        <PhotoSlot label="Professional painting" note="Freshly painted interior." ratio="4/3" />
+        <PhotoSlot
+          label="Professional painting"
+          image={paintingPhoto.src}
+          alt={paintingPhoto.alt}
+          ratio="4/3"
+          position="50% 45%"
+          sizes="(min-width: 56rem) 34rem, calc(100vw - 2.5rem)"
+        />
         <div class="service__body">
           <p class="eyebrow">Our core specialty</p>
           <h3>
@@ -88,7 +108,14 @@ const detailSlots = [
       </article>
 
       <article class="service">
-        <PhotoSlot label="Custom accent wall" note="Finished feature wall." ratio="4/3" />
+        <PhotoSlot
+          label="Custom accent wall"
+          image={accentPhoto.src}
+          alt={accentPhoto.alt}
+          ratio="4/3"
+          position="50% 40%"
+          sizes="(min-width: 56rem) 34rem, calc(100vw - 2.5rem)"
+        />
         <div class="service__body">
           <h3>
             <a href={accentWalls.href ?? '/services/'}>{accentWalls.title}</a>
@@ -123,11 +150,18 @@ const detailSlots = [
     <div class="section-heading">
       <p class="eyebrow">Our work</p>
       <h2 id="details-heading">A closer look at the details.</h2>
-      <p class="lead">Approved project photography will appear here.</p>
+      <p class="lead">A few of the finishes and details from our past work.</p>
     </div>
     <div class="details">
-      {detailSlots.map((slot) => (
-        <PhotoSlot label={slot.label} note={slot.note} ratio="4/5" />
+      {detailPhotos.map((slot) => (
+        <PhotoSlot
+          label={slot.label}
+          image={slot.src}
+          alt={slot.alt}
+          ratio="4/5"
+          position={slot.position}
+          sizes="(min-width: 76rem) 23rem, (min-width: 40rem) 31vw, calc(100vw - 2.5rem)"
+        />
       ))}
     </div>
     <div class="actions details__actions">

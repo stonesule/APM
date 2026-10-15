@@ -79,34 +79,30 @@ Routes: `/`, `/services/`, `/services/painting/`, `/services/accent-walls/`,
   The cream version is the About page brand panel.
 - **Design preview notice**: `site.designPreview` in `src/config/site.ts`
   shows the site-wide "Design preview" banner. Turn it off only at launch.
-- **Photos**: every photo area is a `PhotoSlot` component showing a labelled
-  placeholder. To use an approved photo, add it under `src/assets/photos/`,
-  import it in the page, and pass `image={photo}` with descriptive `alt` text.
-  Astro optimizes it at build time.
-- **Pending details**: unconfirmed service scope and copy are shown with
-  `PendingNote` (or a service's `pendingDetails` list). Remove them as details
-  are confirmed. They are intended for the review preview, not launch.
-- **Services**: edit `src/config/services.ts`. Cards on the homepage and
-  `/services/` update automatically. Detail-page copy is in
-  `src/pages/services/`.
-- **Navigation**: edit `src/config/navigation.ts`.
-- **Colors and typography** (provisional AMP-5 palette): edit `src/styles/tokens.css`, then re-check text
-  contrast (WCAG AA: 4.5:1 for body text).
-- **Projects**: add `src/content/projects/<slug>.md`:
+- **Photos and projects**: photos live in `src/assets/photos/` and are
+  described once, in the projects collection (`src/content/projects/*.md`).
+  The Projects gallery lists every entry; other pages reuse a project's photo
+  with `getPhoto('<project-id>', <index>)` from `src/lib/photos.ts` and pass it
+  to `PhotoSlot` (use `ratio` and `position` to set the crop, and check it at
+  desktop, 390px, and 320px). An entry looks like:
 
   ```md
   ---
-  title: Living room repaint
-  summary: One-sentence description of the work.
-  services: [painting, accent-walls] # slugs from src/config/services.ts
-  area: Decatur # general area only, never an address
-  completed: 2026-09-01
-  coverImage: ./living-room.jpg # file next to the .md file
-  coverAlt: Describe what the photo shows
+  title: Hallway refresh # neutral and descriptive; no invented names
+  summary: What the photos show.
+  services: [painting] # only when the work is evident; otherwise omit
+  order: 3 # gallery position
+  photos: # first photo leads; group only views of the same space
+    - src: ../../assets/photos/hallway-light-walls-finished.jpg
+      alt: Describe what is visible.
+      caption: Shown when a project has several photos.
   ---
   ```
 
-  Only publish completed work APM approved, with photos APM may use.
+  Before adding a photo, remove location metadata (iPhone photos embed GPS)
+  and check it shows no addresses, personal details, or identifiable people.
+  Describe only what is visible: no invented locations, dates, materials, or
+  results. Any `PhotoSlot` without an `image` shows a labelled placeholder.
 
 - **Testimonials**: add `src/content/testimonials/<slug>.md` with the quote as
   the body:

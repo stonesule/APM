@@ -45,6 +45,11 @@ Hosting checks (no publishing): `npm run deploy:check`, then
   and are not rendered. Never add dummy contact details or `#` links.
 - Never render a form that reports success without confirmed delivery. The
   estimate page is a disabled layout with no `<form>` until the form ticket.
+- Photos: describe only what is visible (no invented names, locations,
+  dates, materials, before/after claims, or results); group photos only when
+  they clearly show the same space; tag `services` only when the work is
+  evident. Strip GPS/EXIF before committing (the repo is public). Service pages
+  use only photos from projects tagged with that service.
 - Placeholders must look like placeholders: use `PhotoSlot` for photos and
   `PendingNote` / `pendingDetails` for unconfirmed details. Never present a
   placeholder as completed APM work.

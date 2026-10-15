@@ -8,8 +8,12 @@ import ProcessSteps from '../../components/ProcessSteps.astro';
 import Section from '../../components/Section.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { audiences, getService } from '../../config/services';
+import { getPhoto } from '../../lib/photos';
 
 const service = getService('painting');
+const introPhoto = await getPhoto('apartment-black-walls', 0);
+const hallwayFinished = await getPhoto('hallway-refresh', 0);
+const hallwayPrep = await getPhoto('hallway-refresh', 1);
 const clientList = new Intl.ListFormat('en', { type: 'conjunction' }).format(
   audiences.map((audience) => audience.toLowerCase()),
 );
@@ -37,8 +41,11 @@ const focus = [
         <PhotoSlot
           slot="media"
           label="Professional painting"
-          note="Finished painted room, ideally with natural light."
-          ratio="4/3"
+          image={introPhoto.src}
+          alt={introPhoto.alt}
+          ratio="1/1"
+          position="50% 55%"
+          sizes="(min-width: 76rem) 40rem, (min-width: 56rem) 55vw, calc(100vw - 2.5rem)"
           loading="eager"
         />
         <p class="eyebrow">Our core specialty</p>
@@ -74,8 +81,28 @@ const focus = [
       <PendingNote title="Painting scope — pending confirmation" items={service.pendingDetails} />
     </div>
     <div class="gallery">
-      <PhotoSlot label="Painting detail" note="Close-up of trim, edges, or finish." ratio="1/1" />
-      <PhotoSlot label="Painted room" note="A second finished space." ratio="1/1" />
+      <figure class="photo-figure">
+        <PhotoSlot
+          label="Hallway during preparation"
+          image={hallwayPrep.src}
+          alt={hallwayPrep.alt}
+          ratio="4/5"
+          position="50% 55%"
+          sizes="(min-width: 76rem) 36rem, (min-width: 40rem) 45vw, calc(100vw - 2.5rem)"
+        />
+        <figcaption>{hallwayPrep.caption}</figcaption>
+      </figure>
+      <figure class="photo-figure">
+        <PhotoSlot
+          label="Hallway finished"
+          image={hallwayFinished.src}
+          alt={hallwayFinished.alt}
+          ratio="4/5"
+          position="50% 55%"
+          sizes="(min-width: 76rem) 36rem, (min-width: 40rem) 45vw, calc(100vw - 2.5rem)"
+        />
+        <figcaption>The same hallway, finished with light walls and white trim.</figcaption>
+      </figure>
     </div>
   </Section>
 
@@ -90,6 +117,17 @@ const focus = [
 </BaseLayout>
 
 <style>
+  .photo-figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .photo-figure figcaption {
+    padding-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
   .intro {
     padding-block: var(--space-7) var(--section-space);
   }
