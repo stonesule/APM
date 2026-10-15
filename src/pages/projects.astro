@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import EstimateCta from '../components/EstimateCta.astro';
 import PageHeader from '../components/PageHeader.astro';
-import PendingNote from '../components/PendingNote.astro';
 import PhotoSlot from '../components/PhotoSlot.astro';
 import Section from '../components/Section.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -28,13 +27,6 @@ const photoCount = projects.reduce((n, project) => n + project.data.photos.lengt
     <h2 id="projects-heading" class="visually-hidden">
       Project gallery
     </h2>
-    <PendingNote title="Project details — pending confirmation" class="gallery__note">
-      <p>
-        Project names, locations, and full scope are still to be confirmed. Each description notes
-        only what the photos show.
-      </p>
-    </PendingNote>
-
     <ul class="gallery" aria-label={`${projects.length} projects, ${photoCount} photos`}>
       {projects.map((project, index) => {
         const { title, summary, services, photos } = project.data;
@@ -79,11 +71,6 @@ const photoCount = projects.reduce((n, project) => n + project.data.photos.lengt
 </BaseLayout>
 
 <style>
-  :global(.gallery__note) {
-    margin-bottom: var(--space-6);
-    max-width: 40rem;
-  }
-
   .gallery {
     display: grid;
     gap: var(--space-6) var(--space-5);
